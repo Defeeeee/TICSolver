@@ -5,7 +5,7 @@ import json
 import TICSolver
 
 app = Flask(__name__)
-
+app.config['UPLOAD_FOLDER'] = tempfile.gettempdir()
 
 @app.route('/')
 def index():
