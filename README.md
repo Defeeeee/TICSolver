@@ -22,10 +22,10 @@ This Python script extracts correct answers from HTML files containing quiz or a
 
 1. Make sure you have Python 3 installed. You can check by running:
 
-   ```bash
-   python --version
-   ```
-## Install BeautifulSoup4:
+```bash
+python --version
+```
+2. Install BeautifulSoup4:
 ```Bash
 pip install beautifulsoup4
 ```
