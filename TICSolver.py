@@ -72,18 +72,19 @@ def save_to_json(data, json_file):
 
 
 # Main execution
-html_file_path = '/Users/defeee/Downloads/Función homográfica - Matematica - Campus Virtual ORT.html'
-json_file_path = 'correct_answers.json'
+if __name__ == '__main__':
+    html_file_path = '/Users/defeee/Downloads/Función homográfica - Matematica - Campus Virtual ORT.html'
+    json_file_path = 'correct_answers.json'
 
-rowpag_data = extract_html_data(html_file_path)
-if rowpag_data:
-    correct_answers = extract_correct_answers(rowpag_data)
-    save_decision = input("Do you want to save the data to a JSON file? (y/n): ").lower()
-    if save_decision == 'y':
-        save_to_json(correct_answers, json_file_path)
-    elif save_decision == 'n':
-        print("Data not saved.")
-        if input("Do you want to print the data? (y/n): ").lower() == 'y':
-            print(json.dumps(correct_answers, indent=4))
-else:
-    print("No data to save.")
+    rowpag_data = extract_html_data(html_file_path)
+    if rowpag_data:
+        correct_answers = extract_correct_answers(rowpag_data)
+        save_decision = input("Do you want to save the data to a JSON file? (y/n): ").lower()
+        if save_decision == 'y':
+            save_to_json(correct_answers, json_file_path)
+        elif save_decision == 'n':
+            print("Data not saved.")
+            if input("Do you want to print the data? (y/n): ").lower() == 'y':
+                print(json.dumps(correct_answers, indent=4))
+    else:
+        print("No data to save.")
