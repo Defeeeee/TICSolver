@@ -14,28 +14,27 @@ def index():
 
 @app.route('/ticsolver', methods=['GET', 'POST'])
 def ticsolver():
+    return render_template('upload.html')
+
+@app.route('/ticsolver/results', methods=['POST'])
+def results():
     if request.method == 'POST':
-        if 'file' not in request.files:
-            return redirect(request.url)
-
         file = request.files['file']
-        if file.filename == '':
-            return redirect(request.url)
-
         if file:
-            filename = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-            file.save(filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+            file.save(file_path)
 
-            rowpag_data = TICSolver.extract_html_data(filename)
-            os.remove(filename)  # Delete file after processing
-
+            rowpag_data = TICSolver.extract_html_data(file_path)
+            os.remove(file_path)
             if rowpag_data:
                 correct_answers = TICSolver.extract_correct_answers(rowpag_data)
-                return render_template('results.html', answers=correct_answers)
+                json_file_path = os.path.join(app.config['UPLOAD_FOLDER'], 'correct_answers.json')
+                TICSolver.save_to_json(correct_answers, json_file_path)
+                return redirect(url_for('download', filename='correct_answers.json'))
             else:
-                return "No data extracted."
-
-    return render_template('upload.html')
+                return "Error: No data extracted from the file."
+        else:
+            return "Error: No file uploaded."
 
 
 app.run(host='0.0.0.0', port=9000, ssl_context=(
