@@ -11,7 +11,7 @@ def index():
     return "waaaa"
 
 
-@app.route('/TICSolver/<str:rowPag>')
+@app.route('/TICSolver/<rowPag>')
 def TICSolver(rowPag):
     rowPag = json.loads(rowPag)
     correct_answers = TICSolver.extract_correct_answers(rowPag)
