@@ -28,9 +28,7 @@ def results():
             os.remove(file_path)
             if rowpag_data:
                 correct_answers = TICSolver.extract_correct_answers(rowpag_data)
-                json_file_path = os.path.join(app.config['UPLOAD_FOLDER'], 'correct_answers.json')
-                TICSolver.save_to_json(correct_answers, json_file_path)
-                return redirect(url_for('download', filename='correct_answers.json'))
+                return json.dumps(correct_answers, indent=4)
             else:
                 return "Error: No data extracted from the file."
         else:
