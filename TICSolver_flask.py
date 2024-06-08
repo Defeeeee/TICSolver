@@ -37,6 +37,8 @@ def results():
             return "Error: No file uploaded."
 
 
-app.run(host='0.0.0.0', port=9000, ssl_context=(
-    '/etc/letsencrypt/live/fdiaznem.me/fullchain.pem',
-    '/etc/letsencrypt/live/fdiaznem.me/privkey.pem'))
+# app.run(host='0.0.0.0', port=9000, ssl_context=(
+#     '/etc/letsencrypt/live/fdiaznem.me/fullchain.pem',
+#     '/etc/letsencrypt/live/fdiaznem.me/privkey.pem'))
+
+app.run()
