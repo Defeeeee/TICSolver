@@ -28,7 +28,7 @@ def results():
             os.remove(file_path)
             if rowpag_data:
                 correct_answers = TICSolver.extract_correct_answers(rowpag_data)
-                return json.dumps(correct_answers, indent=4)
+                return render_template('results.html', answers=correct_answers)
             else:
                 return "Error: No data extracted from the file."
         else:
