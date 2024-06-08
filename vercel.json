@@ -1,3 +1,9 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/TICSolver_flask" }]
+  "version": 2,
+  "builds": [
+    { "src": "TICSolver_flask.py", "use": "@vercel/python" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "/TICSolver_flask.py" }
+  ]
 }
