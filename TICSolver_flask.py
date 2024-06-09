@@ -41,4 +41,4 @@ def results():
 #     '/etc/letsencrypt/live/fdiaznem.me/fullchain.pem',
 #     '/etc/letsencrypt/live/fdiaznem.me/privkey.pem'))
 
-app.run(port=443)
+app.run(port=4000)
