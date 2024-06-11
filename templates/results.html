@@ -1,25 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Correct Answers</title>
+  <link rel="stylesheet" href="../static/css/results.css">
+</head>
 <body>
+  <div class="container">
     <h2>Correct Answers:</h2>
-    <ul>
-        {% for answer in answers %}
-            <li>{{ answer['title'] }}:
-                {% if answer['correct_answer'] %}
-                    <ul>
-                    {% for ans in answer['correct_answer'] %}
-                        {% if answer['correct_answer'] is mapping %}
-                            <li>{{ ans }}: {{ answer['correct_answer'][ans] }}</li>
-                        {% else %}
-                            <li>{{ ans }}</li>
-                        {% endif %}
-                    {% endfor %}
-                    </ul>
+    <ul class="answer-list">
+      {% for answer in answers %}
+        <li class="answer-item">
+          {{ answer['title'] }}:
+          {% if answer['correct_answer'] %}
+            <ul class="correct-answer-list">
+              {% for ans in answer['correct_answer'] %}
+                {% if answer['correct_answer'] is mapping %}
+                  <li class="correct-answer">
+                    {{ ans }}: {{ answer['correct_answer'][ans] }}
+                  </li>
                 {% else %}
-                    No correct answer found.
+                  <li class="correct-answer">{{ ans }}</li>
                 {% endif %}
-            </li>
-        {% endfor %}
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="no-answer">No correct answer found.</p>
+          {% endif %}
+        </li>
+      {% endfor %}
     </ul>
+  </div>
 </body>
 </html>

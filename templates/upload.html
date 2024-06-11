@@ -1,9 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minimal Upload Form</title>
+  <link rel="stylesheet" href="../static/css/upload.css">
+</head>
 <body>
-    <form action="/results" method="POST" enctype="multipart/form-data">
-        <input type="file" name="file">
-        <input type="submit" value="Upload">
-    </form>
+  <form action="/results" method="POST" enctype="multipart/form-data" class="upload-form">
+    <input type="file" name="file" class="file-input">
+    <input type="submit" value="Upload" class="submit-btn">
+  </form>
 </body>
 </html>
