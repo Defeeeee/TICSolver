@@ -8,6 +8,10 @@ import TICSolver
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = tempfile.gettempdir()
 
+@app.route('/favicon.ico')
+def favicon():
+    return redirect(url_for('static', filename='favicon.ico'))
+
 @app.route('/', methods=['GET', 'POST'])
 def ticsolver():
     return render_template('upload.html')
