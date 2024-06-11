@@ -40,10 +40,14 @@ def extract_correct_answers(data):
         list: A list of dictionaries, each containing a truncated title and correct answer(s).
     """
     correct_answers = []
+    numpregunta = 1
 
     for page_id, page_data in data.items():
         for question_id, question_data in page_data["questions"].items():
-            title = question_data["title"][:100]  # Truncate title to 100 characters
+            title = question_data["title"][:100]
+            if len(question_data["title"]) >= 100:
+                title = "Pregunta " + str(numpregunta)
+
             question_type = question_data["type"]
             correct_answer = []  # Initialize as a list
 
@@ -60,6 +64,8 @@ def extract_correct_answers(data):
                                   opt["optionType"] == "3"}
 
             correct_answers.append({"title": title, "correct_answer": correct_answer})
+
+            numpregunta += 1
 
     return correct_answers
 
