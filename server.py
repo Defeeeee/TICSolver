@@ -5,20 +5,14 @@ import json
 import TICSolver
 
 
-
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = tempfile.gettempdir()
 
-@app.route('/')
-def index():
-    return "waaaa"
-
-
-@app.route('/ticsolver', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def ticsolver():
     return render_template('upload.html')
 
-@app.route('/ticsolver/results', methods=['POST'])
+@app.route('/results', methods=['POST'])
 def results():
     if request.method == 'POST':
         file = request.files['file']
@@ -37,6 +31,9 @@ def results():
             return "Error: No file uploaded."
 
 
-app.run(host='0.0.0.0', port=9000, ssl_context=(
-    '/etc/letsencrypt/live/fdiaznem.me/fullchain.pem',
-    '/etc/letsencrypt/live/fdiaznem.me/privkey.pem'))
+# app.run(host='0.0.0.0', port=9000, ssl_context=(
+#     '/etc/letsencrypt/live/fdiaznem.me/fullchain.pem',
+#     '/etc/letsencrypt/live/fdiaznem.me/privkey.pem'))
+
+if __name__ == '__main__':
+    app.run(debug=True)
