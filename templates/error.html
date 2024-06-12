@@ -8,8 +8,17 @@
 </head>
 <body>
   <div class="error-container">
-    <p class="error-message">Error en capa 8</p>
-    <p class="instruction">Subi el archivo correcto pibe</p>
+    {% if isNotFound %}
+      <p class="error-message">Error en capa 8</p>
+      <p class="instruction">
+        El archivo que subiste no es un archivo HTML.
+      </p>
+    {% else %}
+    <p class="error-message">Error</p>
+        <p class="instruction">
+            {{ error }}
+        </p>
+        {% endif %}
   </div>
 </body>
 </html>

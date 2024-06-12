@@ -4,23 +4,27 @@ import tempfile
 import json
 import TICSolver
 
-
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = tempfile.gettempdir()
+
 
 @app.route('/favicon.ico')
 def favicon():
     return redirect(url_for('static', filename='favicon.ico'))
 
+
 @app.route('/', methods=['GET', 'POST'])
 def ticsolver():
     return render_template('upload.html')
+
 
 @app.route('/results', methods=['POST'])
 def results():
     if request.method == 'POST':
         try:
             file = request.files['file']
+            if not file.filename.lower().endswith('.html'):
+                return render_template('error.html', error="Error: El archivo no es un archivo HTML.", isNotFound=True)
             if file:
                 file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
                 file.save(file_path)
@@ -35,8 +39,7 @@ def results():
             else:
                 return "Error: No file uploaded."
         except Exception as e:
-            return render_template('error.html')
-
+            return render_template('error.html', error=str(e), isNotFound=("codec can't decode" in str(e)))
 
 # app.run(host='0.0.0.0', port=9000, ssl_context=(
 #     '/etc/letsencrypt/live/fdiaznem.me/fullchain.pem',
