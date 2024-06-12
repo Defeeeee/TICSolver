@@ -39,3 +39,29 @@ body {
 .submit-btn:hover {
   background-color: #222; /* Darken button on hover */
 }
+
+.instructions {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  padding-left: 40px;
+}
+
+/* For screens smaller than 600px, stack the form and instructions vertically */
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+  }
+
+  .instructions {
+    padding-left: 0;
+  }
+}
+
+/* For screens larger than 600px, place the form and instructions side by side */
+@media (min-width: 769px) {
+  body {
+    flex-direction: row;
+  }
+}
