@@ -13,12 +13,17 @@ This Python script extracts correct answers from HTML files containing quiz or a
 * Option to save extracted data to a JSON file or print it to the console.
 * Robust error handling for JSON parsing.
 
-## Requirements
+## Web Application interface
+No installation needed! Access TICSolver directly from your web browser at [ticsolver.fdiaznem.me](https://ticsolver.fdiaznem.me)
+
+
+## Prefer to run TICSolver locally? Here's a quick guide (requires Python 3):
+### Requirements
 
 * Python 3.x
 * BeautifulSoup4 (`pip install beautifulsoup4`)
 
-## Installation
+### Installation (Locally running)
 
 1. Make sure you have Python 3 installed. You can check by running:
 
@@ -30,7 +35,7 @@ python --version
 pip install beautifulsoup4
 ```
 
-## Usage
+### Usage
 Clone or download this repository:
 ```bash
 git clone https://github.com/Defeeeee/TICSolver.git
