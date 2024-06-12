@@ -48,10 +48,16 @@ body {
   padding-left: 40px;
 }
 
-/* For screens smaller than 600px, stack the form and instructions vertically */
+/* For screens smaller than 768px, stack the form and instructions vertically */
 @media (max-width: 768px) {
   body {
     flex-direction: column;
+    padding: 0 20px; /* Add padding to the sides of the screen */
+  }
+
+  .upload-form {
+    width: 100%; /* Make the form take up the full width of its container */
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
   }
 
   .instructions {
@@ -59,7 +65,7 @@ body {
   }
 }
 
-/* For screens larger than 600px, place the form and instructions side by side */
+/* For screens larger than 768px, place the form and instructions side by side */
 @media (min-width: 769px) {
   body {
     flex-direction: row;
