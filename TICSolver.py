@@ -79,7 +79,7 @@ def save_to_json(data, json_file):
 
 # Main execution
 if __name__ == '__main__':
-    html_file_path = '/Users/defeee/Downloads/Función homográfica - Matematica - Campus Virtual ORT.html'
+    html_file_path = input("Enter the path to the HTML file: ")
     json_file_path = 'correct_answers.json'
 
     rowpag_data = extract_html_data(html_file_path)
