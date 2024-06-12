@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for
 import os
 import tempfile
-import json
+
+from flask import Flask, render_template, request, redirect, url_for
+
 import TICSolver
 
 app = Flask(__name__)
@@ -40,6 +41,7 @@ def results():
                 return "Error: No file uploaded."
         except Exception as e:
             return render_template('error.html', error=str(e), isNotFound=("codec can't decode" in str(e)))
+
 
 # app.run(host='0.0.0.0', port=9000, ssl_context=(
 #     '/etc/letsencrypt/live/fdiaznem.me/fullchain.pem',

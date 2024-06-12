@@ -1,52 +1,52 @@
 body {
-  font-family: sans-serif;
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  background-color: #f5f5f5; /* Light gray background */
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-color: #f5f5f5; /* Light gray background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 h2 {
-  margin-bottom: 20px;
-  font-size: 20px;
+    margin-bottom: 20px;
+    font-size: 20px;
 }
 
 .container {
-  text-align: center; /* Center content within the container */
-  max-width: 500px; /* Optional: Set a maximum width for the content */
+    text-align: center; /* Center content within the container */
+    max-width: 500px; /* Optional: Set a maximum width for the content */
 }
 
 .answer-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .answer-item {
-  margin-bottom: 10px;
-  padding: 10px 20px;
-  border-radius: 5px;
-  background-color: #fff; /* White background */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    margin-bottom: 10px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #fff; /* White background */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
 .correct-answer-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  margin-top: 5px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    margin-top: 5px;
 }
 
 .correct-answer {
-  padding: 5px 10px;
-  border-radius: 5px;
-  background-color: #eee; /* Light gray background for sub-answers */
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #eee; /* Light gray background for sub-answers */
 }
 
 .no-answer {
-  margin-top: 5px;
-  color: #999; /* Lighter gray for "No answer found" text */
+    margin-top: 5px;
+    color: #999; /* Lighter gray for "No answer found" text */
 }
