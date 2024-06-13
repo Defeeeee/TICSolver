@@ -1,3 +1,4 @@
+[![Commit Check](https://github.com/commit-check/commit-check-action/actions/workflows/commit-check.yml/badge.svg)](https://github.com/commit-check/commit-check-action/actions/workflows/commit-check.yml)
 # TICSolver - HTML Answer Extractor for TIC ORT
 
 This Python script extracts correct answers from HTML files containing quiz or assessment data, specifically designed to
