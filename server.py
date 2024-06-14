@@ -40,7 +40,7 @@ def results():
             else:
                 return "Error: No file uploaded."
         except Exception as e:
-            return render_template('error.html', error=str(e), isNotFound=("codec can't decode" in str(e)))
+            return render_template('error.html', isNotFound=("codec can't decode" in str(e)))
 
 
 
