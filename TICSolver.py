@@ -90,7 +90,11 @@ if __name__ == '__main__':
         correct_answers = extract_correct_answers(rowpag_data)
         save_decision = input("Do you want to save the data to a JSON file? (y/n): ").lower()
         if save_decision == 'y':
-            save_to_json(correct_answers, json_file_path)
+            try:
+                save_to_json(correct_answers, json_file_path)
+            except PermissionError:
+                print(f"Error: Could not save to '{json_file_path}'. Please check the file path and try again.")
+                print(json.dumps(correct_answers, indent=4))
         elif save_decision == 'n':
             print("Data not saved.")
             if input("Do you want to print the data? (y/n): ").lower() == 'y':
