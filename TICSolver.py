@@ -1,103 +1,105 @@
-import json
+"""
+TICSolver.py
 
+Este script extrae las respuestas correctas de un archivo HTML que contiene los datos de una evaluación o cuestionario.
+El formato de los datos en el HTML debe ser similar a 'rowPag' dentro de una etiqueta <script>.
+El script guarda las respuestas en un archivo JSON ("correct_answers.json") o las imprime en la consola.
+Maneja caracteres especiales UTF-8 y elimina etiquetas HTML de los títulos de las preguntas.
+"""
+
+import json
 from bs4 import BeautifulSoup
 
 
-def extract_html_data(html_file):
-    """
-    Extracts and parses 'rowPag' data from an HTML file's script tag.
-
-    Args:
-        html_file (str): Path to the HTML file.
-
-    Returns:
-        dict: The parsed 'rowPag' data as a Python dictionary, or None if not found.
-    """
-    with open(html_file, 'r') as f:
+def extract_html_data(archivo_html):
+    """Extrae y analiza los datos 'rowPag' de la etiqueta <script> de un archivo HTML."""
+    with open(archivo_html, 'r', encoding='utf-8') as f:
         soup = BeautifulSoup(f, 'html.parser')
 
     for script in soup.find_all('script'):
         if 'rowPag' in script.text:
             try:
-                # More robust extraction using slicing to find the start and end markers
                 rowpag_data = json.loads(script.text.split('rowPag = ')[1].split('}]}}}};')[0] + '}]}}}}')
                 return rowpag_data
-            except (json.JSONDecodeError, ValueError) as e:
-                print(f"Error parsing 'rowPag' data: {e}")
+            except (json.JSONDecodeError, ValueError):
                 return None
-
-    print("No 'rowPag' data found in the HTML file.")
     return None
 
 
-def extract_correct_answers(data):
-    """
-    Extracts truncated titles and correct answers for various question types, reversing the answer format for RELLE and RELAC types.
+def extract_correct_answers(datos):
+    """Extrae las respuestas correctas de los datos 'rowPag'."""
 
-    Args:
-        data (dict): The loaded rowPag data.
-
-    Returns:
-        list: A list of dictionaries, each containing a truncated title and correct answer(s).
-    """
-    correct_answers = []
-    numpregunta = 1
-
-    for page_id, page_data in data.items():
+    respuestas_correctas = []
+    num_pregunta = 1
+    for page_id, page_data in datos.items():
         for question_id, question_data in page_data["questions"].items():
-            title = question_data["title"][:100]
-            if len(question_data["title"]) >= 100:
-                title = "Pregunta " + str(numpregunta)
+            # Eliminar etiquetas HTML y manejar caracteres especiales en el título
+            titulo = BeautifulSoup(question_data["title"], 'html.parser').get_text(separator=" ")
 
-            question_type = question_data["type"]
-            correct_answer = []  # Initialize as a list
+            # Intentar diferentes decodificaciones para manejar caracteres especiales
+            for encoding in ['utf-8', 'latin-1', 'windows-1252']:
+                try:
+                    titulo = titulo.encode('latin-1').decode(encoding)
+                    break  # Salir del bucle si la decodificación es exitosa
+                except (UnicodeEncodeError, UnicodeDecodeError):
+                    pass
 
-            # Common logic for MUL1R, MULNR
-            if question_type in ["MUL1R", "MULNR"]:
-                correct_answer = [opt["title"] for opt in question_data["options"] if opt.get("correct") == "true"]
+            if len(titulo) >= 100:
+                titulo = "Pregunta " + str(num_pregunta)
 
-            elif question_type == "RELLE":
-                correct_answer = {opt["orden"]: opt["correct"] for opt in question_data["options"] if
-                                  opt["correct"] != "null"}
+            tipo_pregunta = question_data["type"]
+            respuesta_correcta = []
+            if tipo_pregunta in ["MUL1R", "MULNR"]:
+                respuesta_correcta = [opt["title"] for opt in question_data["options"] if opt.get("correct") == "true"]
 
-            elif question_type == "RELAC":
-                correct_answer = {int(opt["correct"]): opt["title"] for opt in question_data["options"] if
-                                  opt["optionType"] == "3"}
+            elif tipo_pregunta == "RELLE":
+                respuesta_correcta = {opt["orden"]: opt["correct"] for opt in question_data["options"] if
+                                      opt["correct"] != "null"}
 
-            correct_answers.append({"title": title, "correct_answer": correct_answer})
+            elif tipo_pregunta == "RELAC":
+                respuesta_correcta = {int(opt["correct"]): opt["title"] for opt in question_data["options"] if
+                                      opt["optionType"] == "3"}
 
-            numpregunta += 1
-
-    return correct_answers
-
-
-def save_to_json(data, json_file):
-    """Saves the extracted data to a JSON file."""
-    with open(json_file, 'w') as f:
-        json.dump(data, f, indent=4)
-    print(f"Data extracted and saved to '{json_file}'")
+            respuestas_correctas.append({"title": titulo, "correct_answer": respuesta_correcta})
+            num_pregunta += 1
+    return respuestas_correctas
 
 
-# Main execution
+def save_to_json(datos, archivo_json):
+    """Guarda los datos extraídos en un archivo JSON, con manejo de errores."""
+    while True:
+        try:
+            with open(archivo_json, 'x') as f:
+                json.dump(datos, f, indent=4, ensure_ascii=False)  # Evitar problemas con caracteres especiales
+            break
+        except FileExistsError:
+            if input(f"El archivo '{archivo_json}' ya existe. ¿Desea sobrescribirlo? (s/n): ").lower() != 's':
+                return False
+            else:
+                with open(archivo_json, 'w') as f:
+                    json.dump(datos, f, indent=4, ensure_ascii=False)
+                break
+    return True
+
+
 if __name__ == '__main__':
-    html_file_path = ''
-    while not html_file_path.endswith('.html'):
-        html_file_path = input("Enter the path to the HTML file: ")
-    json_file_path = 'correct_answers.json'
+    ruta_archivo_html = input("Ingrese la ruta al archivo HTML: ")
+    ruta_archivo_json = 'correct_answers.txt'  # Nombre por defecto
 
-    rowpag_data = extract_html_data(html_file_path)
-    if rowpag_data:
-        correct_answers = extract_correct_answers(rowpag_data)
-        save_decision = input("Do you want to save the data to a JSON file? (y/n): ").lower()
-        if save_decision == 'y':
-            try:
-                save_to_json(correct_answers, json_file_path)
-            except PermissionError:
-                print(f"Error: Could not save to '{json_file_path}'. Please check the file path and try again.")
-                print(json.dumps(correct_answers, indent=4))
-        elif save_decision == 'n':
-            print("Data not saved.")
-            if input("Do you want to print the data? (y/n): ").lower() == 'y':
-                print(json.dumps(correct_answers, indent=4))
+    # Extraer datos del HTML
+    datos_rowpag = extract_html_data(ruta_archivo_html)
+    if datos_rowpag:
+        # Extraer respuestas correctas
+        respuestas = extract_correct_answers(datos_rowpag)
+
+        # Guardar o imprimir resultados
+        if input("¿Guardar en JSON? (s/n): ").lower() == 's':
+            if not save_to_json(respuestas, ruta_archivo_json):
+                print("Datos no guardados.")
+            else:
+                print(f"Datos guardados en '{ruta_archivo_json}'")
+        else:
+            if input("¿Imprimir los datos? (s/n): ").lower() == 's':
+                print(json.dumps(respuestas, indent=4, ensure_ascii=False))
     else:
-        print("No data to save.")
+        print("No se encontraron datos 'rowPag' en el archivo HTML.")
