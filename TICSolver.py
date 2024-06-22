@@ -84,7 +84,7 @@ def save_to_json(datos, archivo_json):
 
 if __name__ == '__main__':
     ruta_archivo_html = input("Ingrese la ruta al archivo HTML: ")
-    ruta_archivo_json = 'correct_answers.txt'  # Nombre por defecto
+    ruta_archivo_json = 'correct_answers.json'  # Nombre por defecto
 
     # Extraer datos del HTML
     datos_rowpag = extract_html_data(ruta_archivo_html)
