@@ -1,4 +1,4 @@
-[![Commit Check](https://github.com/commit-check/commit-check-action/actions/workflows/commit-check.yml/badge.svg)](https://github.com/Defeeeee/TICSolver/actions/workflows/commit-check.yml) [![GitHub License](https://img.shields.io/github/license/Defeeeee/TICSolver)](./LICENSE) [![Website](https://img.shields.io/website?url=https://ticsolver.fdiaznem.me)](https://ticsolver.fdiaznem.me)
+[![Commit Check](https://github.com/commit-check/commit-check-action/actions/workflows/commit-check.yml/badge.svg)](https://github.com/Defeeeee/TICSolver/actions/workflows/commit-check.yml) [![GitHub License](https://img.shields.io/github/license/Defeeeee/TICSolver)](./LICENSE) [![Website](https://img.shields.io/website?url=https://ticsolver.fdiaznem.com.ar)](https://ticsolver.fdiaznem.com.ar)
 
 # TICSolver - HTML Answer Extractor for TIC ORT
 
