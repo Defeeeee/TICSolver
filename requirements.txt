@@ -1,2 +1,5 @@
-beautifulsoup4==4.12.3
-Flask==3.0.3
+beautifulsoup4
+Flask
+flask-login
+flask_sqlalchemy
+Werkzeug
