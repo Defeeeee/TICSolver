@@ -11,7 +11,8 @@ from models import db, User, History
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = tempfile.gettempdir()
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://default:JdcNLQ8b5xyY@ep-shiny-surf-a4imudfy-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require"
+app.config[
+    'SQLALCHEMY_DATABASE_URI'] = "postgresql://default:JdcNLQ8b5xyY@ep-shiny-surf-a4imudfy-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.urandom(24)  # Set a secret key for session management
 
@@ -21,17 +22,21 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
 
 @app.route('/favicon.ico')
 def favicon():
     return redirect(url_for('static', filename='favicon.ico'))
 
+
 @app.route('/', methods=['GET', 'POST'])
 def ticsolver():
     return render_template('upload.html')
+
 
 @app.route('/results', methods=['POST'])
 @login_required
@@ -49,7 +54,8 @@ def results():
                 os.remove(file_path)
                 if rowpag_data:
                     correct_answers = TICSolver.extract_correct_answers(rowpag_data)
-                    history_entry = History(user_id=current_user.id, file_name=file.filename, result=json.dumps(correct_answers))
+                    history_entry = History(user_id=current_user.id, file_name=file.filename,
+                                            result=json.dumps(correct_answers))
                     db.session.add(history_entry)
                     db.session.commit()
                     return render_template('results.html', answers=correct_answers)
@@ -59,6 +65,7 @@ def results():
                 return "Error: No file uploaded."
         except Exception as e:
             return render_template('error.html', isNotFound=("codec can't decode" in str(e)))
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -72,6 +79,7 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html')
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -83,17 +91,20 @@ def login():
             return redirect(url_for('ticsolver'))
     return render_template('login.html')
 
+
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('ticsolver'))
 
+
 @app.route('/history')
 @login_required
 def history():
     user_history = History.query.filter_by(user_id=current_user.id).all()
     return render_template('history.html', history=user_history)
+
 
 if __name__ == '__main__':
     with app.app_context():
