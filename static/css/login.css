@@ -1,0 +1,42 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f5f5f5; /* Light gray background */
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: #fff; /* White form background */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"] {
+    padding: 10px;
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 3px;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.submit-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    background-color: #333; /* Dark gray button */
+    color: #fff; /* White button text */
+    font-size: 16px;
+    cursor: pointer; /* Indicate clickable button */
+}
+
+.submit-btn:hover {
+    background-color: #222; /* Darken button on hover */
+}

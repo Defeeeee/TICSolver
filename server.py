@@ -1,25 +1,40 @@
 import os
+import json
 import tempfile
-
 from flask import Flask, render_template, request, redirect, url_for
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
 
 import TICSolver
+from models import db, User, History
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = tempfile.gettempdir()
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://default:JdcNLQ8b5xyY@ep-shiny-surf-a4imudfy-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = os.urandom(24)  # Set a secret key for session management
 
+db.init_app(app)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 @app.route('/favicon.ico')
 def favicon():
     return redirect(url_for('static', filename='favicon.ico'))
 
-
 @app.route('/', methods=['GET', 'POST'])
 def ticsolver():
     return render_template('upload.html')
 
-
 @app.route('/results', methods=['POST'])
+@login_required
 def results():
     if request.method == 'POST':
         try:
@@ -34,6 +49,9 @@ def results():
                 os.remove(file_path)
                 if rowpag_data:
                     correct_answers = TICSolver.extract_correct_answers(rowpag_data)
+                    history_entry = History(user_id=current_user.id, file_name=file.filename, result=json.dumps(correct_answers))
+                    db.session.add(history_entry)
+                    db.session.commit()
                     return render_template('results.html', answers=correct_answers)
                 else:
                     return "Error: No data extracted from the file."
@@ -42,7 +60,42 @@ def results():
         except Exception as e:
             return render_template('error.html', isNotFound=("codec can't decode" in str(e)))
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+        new_user = User(username=username, password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+        return redirect(url_for('login'))
+    return render_template('register.html')
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user = User.query.filter_by(username=username).first()
+        if user and check_password_hash(user.password, password):
+            login_user(user)
+            return redirect(url_for('ticsolver'))
+    return render_template('login.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('ticsolver'))
+
+@app.route('/history')
+@login_required
+def history():
+    user_history = History.query.filter_by(user_id=current_user.id).all()
+    return render_template('history.html', history=user_history)
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()  # Create database tables if they do not exist
     app.run(debug=True)

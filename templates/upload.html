@@ -7,15 +7,34 @@
     <link rel="stylesheet" href="../static/css/upload.css">
 </head>
 <body>
-<form action="/results" method="POST" enctype="multipart/form-data" class="upload-form">
-    <input type="file" name="file" class="file-input">
-    <input type="submit" value="Subir" class="submit-btn">
-</form>
-<div class="instructions">
-    <h2>Como guardar el archivo del form</h2>
-    <p>Hacer <b>click derecho</b> en cualquier lugar de la pagina y seleccionar <b>Guardar Como</b></p>
-    <p>Seleccionar el lugar donde se desea guardar el archivo</p>
-    <p>Subirlo en el cuadro de la izquierda</p>
-</div>
+    <nav class="navbar">
+        <div class="navbar-brand">TICSolver</div>
+        <div class="navbar-links">
+            {% if current_user.is_authenticated %}
+                <span class="navbar-user">Hello, {{ current_user.username }}</span>
+                <a href="{{ url_for('logout') }}" class="navbar-btn">Cerrar Sesión</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="navbar-btn">Iniciar Sesión</a>
+                <a href="{{ url_for('register') }}" class="navbar-btn">Registrarse</a>
+            {% endif %}
+        </div>
+    </nav>
+    {% if current_user.is_authenticated %}
+        <form action="/results" method="POST" enctype="multipart/form-data" class="upload-form">
+            <input type="file" name="file" class="file-input">
+            <input type="submit" value="Subir" class="submit-btn">
+        </form>
+        <div class="instructions">
+            <h2>Como guardar el archivo del form</h2>
+            <p>Hacer <b>click derecho</b> en cualquier lugar de la pagina y seleccionar <b>Guardar Como</b></p>
+            <p>Seleccionar el lugar donde se desea guardar el archivo</p>
+            <p>Subirlo en el cuadro de la izquierda</p>
+        </div>
+    {% else %}
+        <div class="instructions">
+            <h2>Bienvenido a TICSolver</h2>
+            <p>TICSolver es una herramienta que te ayuda a analizar y extraer datos de archivos HTML. Por favor, inicia sesión o regístrate para continuar.</p>
+        </div>
+    {% endif %}
 </body>
 </html>
