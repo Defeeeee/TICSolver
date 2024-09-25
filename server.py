@@ -5,7 +5,6 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from sqlalchemy import inspect, text
 
 import TICSolver
 from models import db, User, History
@@ -35,17 +34,7 @@ app.secret_key = os.urandom(24)
 
 db.init_app(app)
 
-# Create database tables if they don't exist - MOVED OUTSIDE the 'if __name__ == '__main__':' block
-with app.app_context():
-    db.create_all()
-
-# Check if 'email' column exists in the User table
-with app.app_context():
-    inspector = inspect(db.engine)
-    if 'email' not in inspector.get_columns('user'):
-        # Add the 'email' column if it doesn't exist
-        with db.engine.connect() as connection:
-            connection.execute(text('ALTER TABLE "user" ADD COLUMN email VARCHAR(120) UNIQUE;'))
+# Removed the code to check and create the 'email' column
 
 app.register_blueprint(blueprint, url_prefix="/login")
 
@@ -153,4 +142,6 @@ def history():
 
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
