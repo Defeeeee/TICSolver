@@ -17,7 +17,11 @@ google_client_secret = os.environ.get('GOOGLE_SECRET')
 blueprint = make_google_blueprint(
     client_id=google_client_id,
     client_secret=google_client_secret,
-    scope=["profile", "email"],
+    scope=[
+        "https://www.googleapis.com/auth/userinfo.profile",
+        "https://www.googleapis.com/auth/userinfo.email",
+        "openid"  # Include this if you need OpenID Connect features
+    ],
     redirect_to="google_authorized"
 )
 
