@@ -7,7 +7,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from werkzeug.security import generate_password_hash, check_password_hash
 
 import TICSolver
-from models import db, User, History  # Assuming your User model is in models.py
+from models import db, User, History
 
 from flask_dance.contrib.google import make_google_blueprint, google
 
@@ -28,8 +28,7 @@ blueprint = make_google_blueprint(
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = tempfile.gettempdir()
-app.config[
-    'SQLALCHEMY_DATABASE_URI'] = "postgresql://default:JdcNLQ8b5xyY@ep-shiny-surf-a4imudfy-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://default:JdcNLQ8b5xyY@ep-shiny-surf-a4imudfy-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.urandom(24)
 
@@ -43,11 +42,9 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-
 
 @app.route("/login/google_authorized")
 def google_authorized():
@@ -72,16 +69,13 @@ def google_authorized():
     login_user(user)
     return redirect(url_for("ticsolver"))
 
-
 @app.route('/favicon.ico')
 def favicon():
     return redirect(url_for('static', filename='favicon.ico'))
 
-
 @app.route('/', methods=['GET', 'POST'])
 def ticsolver():
     return render_template('upload.html')
-
 
 @app.route('/results', methods=['POST'])
 @login_required
@@ -111,7 +105,6 @@ def results():
         except Exception as e:
             return render_template('error.html', isNotFound=("codec can't decode" in str(e)))
 
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -123,7 +116,6 @@ def register():
         db.session.commit()
         return redirect(url_for('login'))
     return render_template('register.html')
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -138,20 +130,17 @@ def login():
             flash('Invalid username or password or you registered with Google', 'error')
     return render_template('login.html')
 
-
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('ticsolver'))
 
-
 @app.route('/history')
 @login_required
 def history():
     user_history = History.query.filter_by(user_id=current_user.id).all()
     return render_template('history.html', history=user_history)
-
 
 if __name__ == '__main__':
     app.run(debug=True)
