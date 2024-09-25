@@ -72,3 +72,40 @@ body {
 .btn-primary:hover {
     background-color: #0056b3;
 }
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .container {
+        max-width: 90%; /* Make the container take up most of the screen width */
+        padding: 20px; /* Reduce padding */
+    }
+
+    h1, h2 { /* Adjust heading sizes */
+        font-size: 24px;
+    }
+
+    p {
+        font-size: 16px; /* Reduce body text size */
+    }
+
+    .header-content {
+        flex-direction: column; /* Stack header elements vertically */
+        align-items: center;
+    }
+
+    .error-section {
+        padding-top: 20px; /* Reduce top padding */
+    }
+
+    .error-container {
+        padding: 20px; /* Reduce padding in the error container */
+    }
+
+    .error-message {
+        font-size: 20px; /* Reduce error message size */
+    }
+
+    .instruction {
+        font-size: 16px;
+    }
+}

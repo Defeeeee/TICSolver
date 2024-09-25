@@ -258,3 +258,50 @@ li {
 .btn-secondary:hover {
     background-color: #5a6268;
 }
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .container {
+        max-width: 90%; /* Make the container take up most of the screen width */
+        padding: 20px; /* Reduce padding */
+    }
+
+    h2 {
+        font-size: 24px; /* Reduce heading size */
+    }
+
+    p, li {
+        font-size: 16px; /* Reduce body text and list item size */
+    }
+
+    .header-content {
+        flex-direction: column; /* Stack header elements vertically */
+        align-items: center;
+    }
+
+    .header nav {
+        margin-top: 10px;
+    }
+
+    .register-section {
+        padding: 30px; /* Reduce padding in the register section */
+    }
+
+    .register-form {
+        width: 100%; /* Make the form full width on mobile */
+    }
+
+    .register-form input[type="text"],
+    .register-form input[type="email"],
+    .register-form input[type="password"] {
+        width: 100%; /* Make input fields full width on mobile */
+    }
+
+    .divider span {
+        width: 30%; /* Adjust divider width on mobile if needed */
+    }
+
+    .google-login a, .submit-btn {
+        font-size: 16px; /* Reduce button font size slightly */
+    }
+}
