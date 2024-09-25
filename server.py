@@ -1,13 +1,13 @@
 import os
 import json
 import tempfile
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 import TICSolver
-from models import db, User, History
+from models import db, User, History  # Assuming your User model is in models.py
 
 from flask_dance.contrib.google import make_google_blueprint, google
 
@@ -28,13 +28,14 @@ blueprint = make_google_blueprint(
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = tempfile.gettempdir()
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://default:JdcNLQ8b5xyY@ep-shiny-surf-a4imudfy-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require"
+app.config[
+    'SQLALCHEMY_DATABASE_URI'] = "postgresql://default:JdcNLQ8b5xyY@ep-shiny-surf-a4imudfy-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.urandom(24)
 
 db.init_app(app)
-
-# Removed the code to check and create the 'email' column
+with app.app_context():
+    db.create_all()
 
 app.register_blueprint(blueprint, url_prefix="/login")
 
@@ -42,9 +43,11 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
 
 @app.route("/login/google_authorized")
 def google_authorized():
@@ -61,7 +64,7 @@ def google_authorized():
         user = User(
             username=google_info['name'],
             email=google_info['email'],
-            # ... other fields you need
+            registered_with_google=True,
         )
         db.session.add(user)
         db.session.commit()
@@ -69,13 +72,16 @@ def google_authorized():
     login_user(user)
     return redirect(url_for("ticsolver"))
 
+
 @app.route('/favicon.ico')
 def favicon():
     return redirect(url_for('static', filename='favicon.ico'))
 
+
 @app.route('/', methods=['GET', 'POST'])
 def ticsolver():
     return render_template('upload.html')
+
 
 @app.route('/results', methods=['POST'])
 @login_required
@@ -105,6 +111,7 @@ def results():
         except Exception as e:
             return render_template('error.html', isNotFound=("codec can't decode" in str(e)))
 
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -117,22 +124,27 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html')
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
         user = User.query.filter_by(username=username).first()
-        if user and check_password_hash(user.password, password):
+        if user and not user.registered_with_google and check_password_hash(user.password, password):
             login_user(user)
             return redirect(url_for('ticsolver'))
+        else:
+            flash('Invalid username or password or you registered with Google', 'error')
     return render_template('login.html')
+
 
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('ticsolver'))
+
 
 @app.route('/history')
 @login_required
@@ -142,6 +154,4 @@ def history():
 
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
     app.run(debug=True)
