@@ -1,42 +1,282 @@
+/* General Styles (same as login.css) */
 body {
-    font-family: sans-serif;
+    font-family: 'Public Sans', sans-serif;
     margin: 0;
     padding: 0;
+    background-color: #f5f5f5;
+    color: #333;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: #f5f5f5; /* Light gray background */
 }
 
-.register-form {
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    border-radius: 5px;
-    background-color: #fff; /* White form background */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+.container {
+    max-width: 400px;  /* Adjust this value to control the form's width */
+    margin: 0 auto;
+    padding: 40px;
+}
+
+/* Register Section Styles */
+.register-section {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    text-align: center;
 }
 
 .register-form input[type="text"],
+.register-form input[type="email"],
 .register-form input[type="password"] {
-    padding: 10px;
-    border: 1px solid #ccc; /* Light gray border */
-    border-radius: 3px;
-    margin-bottom: 10px;
+    width: calc(100% - 24px);
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
     font-size: 16px;
+    box-sizing: border-box;
 }
 
-.submit-btn {
-    padding: 10px 20px;
+.submit-btn, .google-login a {
+    background-color: #007bff;
+    color: #fff;
+    padding: 15px 30px;
     border: none;
-    border-radius: 3px;
-    background-color: #333; /* Dark gray button */
-    color: #fff; /* White button text */
-    font-size: 16px;
-    cursor: pointer; /* Indicate clickable button */
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s;
+    width: 100%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
-.submit-btn:hover {
-    background-color: #222; /* Darken button on hover */
+.submit-btn:hover, .google-login a:hover {
+    background-color: #0056b3;
+}
+
+.google-login a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.google-login i {
+    margin-right: 10px;
+}
+
+/* Google Login Styles (if implemented) */
+.google-login {
+    margin-bottom: 20px;
+}
+
+/* Divider Styles */
+.divider {
+    margin: 20px 0;
+    text-align: center;
+    color: #ccc;
+}
+
+.divider span {
+    background-color: #fff;
+    padding: 0 10px;
+    position: relative;
+}
+
+.divider span::before,
+.divider span::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 50%;
+    height: 1px;
+    background-color: #ccc;
+}
+
+.divider span::before {
+    left: 0;
+    transform: translateY(-50%);
+}
+
+.divider span::after {
+    right: 0;
+    transform: translateY(-50%);
+}
+
+/* Header Styles */
+.header {
+    background-color: #fff;
+    color: #333;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.header nav {
+    margin-top: 0;
+}
+
+.header nav a {
+    color: #333;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 16px;
+}
+
+.header nav a:hover {
+    text-decoration: underline;
+}
+
+.header nav a.btn {
+    color: #fff !important;
+}
+
+/* Hero Section Styles */
+.hero {
+    background-color: #fff;
+    text-align: center;
+    padding: 100px 0;
+    position: relative;
+    overflow: hidden;
+    min-height: calc(100vh - 60px);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.hero h2 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.hero p {
+    font-size: 24px;
+    color: #666;
+    margin-bottom: 40px;
+}
+
+.scroll-down {
+    font-size: 30px;
+    color: #333;
+    text-decoration: none;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-20px);
+    }
+    60% {
+        transform: translateY(-10px);
+    }
+}
+
+.blob {
+    position: absolute;
+    bottom: -50%;
+    right: -30%;
+    width: 300%;
+    height: 300%;
+    background-color: #f0f0f0;
+    border-radius: 50%;
+    filter: blur(100px);
+    z-index: 0;
+}
+
+/* Main Content Styles */
+main {
+    padding-top: 0;
+}
+
+section {
+    margin-bottom: 50px;
+}
+
+h2 {
+    font-size: 30px;
+    margin-bottom: 30px;
+}
+
+p {
+    line-height: 1.8;
+    font-size: 18px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+/* Welcome Section Styles */
+.welcome-section .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.welcome-content {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.features {
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+.cta {
+    text-align: center;
+}
+
+
+/* Button Styles */
+.btn {
+    display: inline-block;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    color: #fff;
+}
+
+.btn-primary {
+    background-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
 }
