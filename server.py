@@ -33,6 +33,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.urandom(24)
 
 db.init_app(app)
+
+# Create database tables if they don't exist
 with app.app_context():
     db.create_all()
 
@@ -55,16 +57,21 @@ def google_authorized():
     assert resp.ok, resp.text
     google_info = resp.json()
 
-    # Check if user exists in your database, if not create one
+    # Check if user exists, if not create one (excluding 'password')
     user = User.query.filter_by(email=google_info['email']).first()
     if not user:
         user = User(
             username=google_info['name'],
             email=google_info['email'],
-            registered_with_google=True,
+            registered_with_google=True
         )
         db.session.add(user)
-        db.session.commit()
+
+    # Debugging: Print the SQL query and user data before committing
+    print(user.__table__.insert().compile().string)
+    print(user.__dict__)
+
+    db.session.commit()
 
     login_user(user)
     return redirect(url_for("ticsolver"))
