@@ -1,16 +1,107 @@
-/* General Styles */
+/* General Styles (same as login.css) */
 body {
     font-family: 'Public Sans', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f5f5f5;
-    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f5f5f5; /* Light gray background */
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 400px;
     margin: 0 auto;
     padding: 40px;
+}
+
+/* Register Section Styles */
+.register-section {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    text-align: center;
+}
+
+.register-form input[type="text"],
+.register-form input[type="email"],
+.register-form input[type="password"] {
+    width: calc(100% - 24px);
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.submit-btn {
+    background-color: #007bff;
+    color: #fff;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s;
+    width: 100%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.submit-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Google Login Styles (if implemented) */
+.google-login {
+    margin-bottom: 20px;
+}
+
+.google-login a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.google-login i {
+    margin-right: 10px;
+}
+
+/* Divider Styles */
+.divider {
+    margin: 20px 0;
+    text-align: center;
+    color: #ccc;
+}
+
+.divider span {
+    background-color: #fff;
+    padding: 0 10px;
+    position: relative;
+    display: inline-block;
+    margin: 0 15px; /* Add margin on both sides of the spans */
+}
+
+.divider span::before,
+.divider span::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 40%;
+    height: 1px;
+    background-color: #ccc;
+}
+
+.divider span::before {
+    left: 0;
+    transform: translateY(-50%);
+}
+
+.divider span::after {
+    right: 0;
+    transform: translateY(-50%);
 }
 
 /* Header Styles */
@@ -59,7 +150,7 @@ body {
     padding: 100px 0;
     position: relative;
     overflow: hidden;
-    min-height: 60vh /* Make hero section full viewport height */
+    min-height: calc(100vh - 60px);
 }
 
 .hero-content {
@@ -137,73 +228,6 @@ ul {
 li {
     margin-bottom: 15px;
     font-size: 18px;
-}
-
-/* Upload Section Styles */
-.upload-section {
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    padding: 40px;
-}
-
-.upload-section input[type="file"] {
-    margin-bottom: 20px;
-    padding: 12px;
-    font-size: 16px;
-}
-
-.upload-section button[type="submit"] {
-    background-color: #333;
-    color: #fff;
-    padding: 15px 30px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 18px;
-    transition: background-color 0.3s;
-}
-
-.upload-section button[type="submit"]:hover {
-    background-color: #555;
-}
-
-.instructions {
-    margin-top: 30px;
-    font-size: 16px;
-    color: #666;
-}
-
-.instructions ol {
-    list-style-type: decimal;
-    padding-left: 20px;
-}
-
-/* Welcome Section Styles */
-.welcome-section .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.welcome-content {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.features {
-    text-align: left;
-    margin-bottom: 30px;
-}
-
-.cta {
-    text-align: center;
-}
-
-.upload-section form {
-    margin-bottom: 20px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 20px;
 }
 
 /* Button Styles */

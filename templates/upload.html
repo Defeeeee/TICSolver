@@ -7,15 +7,80 @@
     <link rel="stylesheet" href="../static/css/upload.css">
 </head>
 <body>
-<form action="/results" method="POST" enctype="multipart/form-data" class="upload-form">
-    <input type="file" name="file" class="file-input">
-    <input type="submit" value="Subir" class="submit-btn">
-</form>
-<div class="instructions">
-    <h2>Como guardar el archivo del form</h2>
-    <p>Hacer <b>click derecho</b> en cualquier lugar de la pagina y seleccionar <b>Guardar Como</b></p>
-    <p>Seleccionar el lugar donde se desea guardar el archivo</p>
-    <p>Subirlo en el cuadro de la izquierda</p>
-</div>
+
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1>TICSolver</h1>
+                <nav>
+                    {% if current_user.is_authenticated %}
+                        <span>Hello, {{ current_user.first_name}}</span>
+                        <a href="{{ url_for('logout') }}" class="btn btn-secondary">Cerrar Sesión</a>
+                    {% else %}
+                        <a href="{{ url_for('login') }}" class="btn btn-primary">Iniciar Sesión</a>
+                        <a href="{{ url_for('register') }}" class="btn btn-secondary">Registrarse</a>
+                    {% endif %}
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        {% if not current_user.is_authenticated %}
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h2>TICSolver</h2>
+                    <p>Tu mano derecha para los formularios.</p>
+                    <a href="#main-content" class="scroll-down">&#x2193;</a>
+                </div>
+                <div class="blob"></div>
+            </div>
+        </section>
+        {% endif %}
+
+        <section id="main-content" class="container">
+            {% if current_user.is_authenticated %}
+                <section class="upload-section">
+                    <h2>Subir Archivo HTML</h2>
+                    <form action="/results" method="POST" enctype="multipart/form-data">
+                        <input type="file" name="file" accept=".html">
+                        <button type="submit" class="btn btn-primary">Subir</button>
+                    </form>
+                    <div class="instructions">
+                        <h3>Como guardar el archivo del form</h3>
+                        <ol>
+                            <li>Hacer <b>click derecho</b> en cualquier lugar de la pagina</li>
+                            <li>Seleccionar <b>Guardar Como</b></li>
+                            <li>Seleccionar el lugar donde se desea guardar el archivo</li>
+                            <li>Subirlo en el cuadro de la izquierda</li>
+                        </ol>
+                    </div>
+                </section>
+            {% else %}
+                <section class="welcome-section">
+                    <div class="container">
+                        <div class="welcome-content">
+                            <h2>Bienvenido a TICSolver</h2>
+                            <p>TICSolver es una herramienta que te ayuda a analizar y extraer datos de archivos HTML.</p>
+                        </div>
+                        <div class="features">
+                            <h3>Características:</h3>
+                            <ul>
+                                <li>Sube archivos HTML y extrae datos fácilmente.</li>
+                                <li>Guarda y gestiona tu historial de análisis.</li>
+                                <li>Interfaz amigable y fácil de usar.</li>
+                            </ul>
+                        </div>
+                        <div class="cta">
+                            <p>Para comenzar, <a href="{{ url_for('login') }}" class="btn btn-primary">inicia sesión</a> o <a href="{{ url_for('register') }}" class="btn btn-secondary">regístrate</a>.</p>
+                        </div>
+                    </div>
+                </section>
+            {% endif %}
+        </section>
+
+    </main>
+
 </body>
 </html>

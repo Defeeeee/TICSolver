@@ -5,12 +5,68 @@ body {
     padding: 0;
     background-color: #f5f5f5;
     color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 400px; /* Adjust as needed */
     margin: 0 auto;
     padding: 40px;
+}
+
+/* Login Section Styles */
+.login-section {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    text-align: center;
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"] {
+    width: calc(100% - 24px); /* Account for padding */
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.submit-btn {
+    background-color: #007bff; /* Vibrant blue color */
+    color: #fff;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s;
+    width: 100%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.submit-btn:hover {
+    background-color: #0056b3; /* Darken the blue on hover */
+}
+
+/* Google Login Styles (if implemented) */
+.google-login {
+    margin-top: 20px;
+}
+
+.google-login a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.google-login i {
+    margin-right: 10px;
 }
 
 /* Header Styles */
@@ -59,7 +115,7 @@ body {
     padding: 100px 0;
     position: relative;
     overflow: hidden;
-    min-height: 60vh /* Make hero section full viewport height */
+    min-height: calc(100vh - 60px);
 }
 
 .hero-content {
@@ -139,46 +195,6 @@ li {
     font-size: 18px;
 }
 
-/* Upload Section Styles */
-.upload-section {
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    padding: 40px;
-}
-
-.upload-section input[type="file"] {
-    margin-bottom: 20px;
-    padding: 12px;
-    font-size: 16px;
-}
-
-.upload-section button[type="submit"] {
-    background-color: #333;
-    color: #fff;
-    padding: 15px 30px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 18px;
-    transition: background-color 0.3s;
-}
-
-.upload-section button[type="submit"]:hover {
-    background-color: #555;
-}
-
-.instructions {
-    margin-top: 30px;
-    font-size: 16px;
-    color: #666;
-}
-
-.instructions ol {
-    list-style-type: decimal;
-    padding-left: 20px;
-}
-
 /* Welcome Section Styles */
 .welcome-section .container {
     display: flex;
@@ -198,12 +214,6 @@ li {
 
 .cta {
     text-align: center;
-}
-
-.upload-section form {
-    margin-bottom: 20px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 20px;
 }
 
 /* Button Styles */
