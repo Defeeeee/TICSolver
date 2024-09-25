@@ -4,6 +4,7 @@ import tempfile
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.security import generate_password_hash, check_password_hash
 
 import TICSolver
@@ -134,19 +135,31 @@ def register():
             flash('Las contraseñas no coinciden', 'error')
             return redirect(url_for('register'))
 
-        hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-        new_user = User(
-            username=username,
-            password=hashed_password,
-            first_name=first_name,
-            last_name=last_name,
-            email=email
-        )
-        db.session.add(new_user)
-        db.session.commit()
-        return redirect(url_for('login'))
-    return render_template('register.html')
+        try:
+            # Check if email already exists
+            existing_user = User.query.filter_by(email=email).first()
+            if existing_user:
+                flash('El correo electrónico ya está registrado', 'error')
+                return redirect(url_for('register'))
 
+            hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+            new_user = User(
+                username=username,
+                password=hashed_password,
+                first_name=first_name,
+                last_name=last_name,
+                email=email
+            )
+            db.session.add(new_user)
+            db.session.commit()  # Commit changes to the database
+            return redirect(url_for('login'))
+
+        except SQLAlchemyError as e:  # Catch any SQLAlchemy errors during database operations
+            db.session.rollback()  # Roll back the transaction in case of an error
+            flash('Error al registrar el usuario. Por favor, inténtalo de nuevo.', 'error')
+            return redirect(url_for('register'))
+
+    return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
