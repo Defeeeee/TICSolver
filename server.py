@@ -35,7 +35,11 @@ app.secret_key = os.urandom(24)
 
 db.init_app(app)
 
-# Check if 'email' column exists in the User table - MOVED HERE
+# Create database tables if they don't exist - MOVED OUTSIDE the 'if __name__ == '__main__':' block
+with app.app_context():
+    db.create_all()
+
+# Check if 'email' column exists in the User table
 with app.app_context():
     inspector = inspect(db.engine)
     if 'email' not in inspector.get_columns('user'):
@@ -147,7 +151,6 @@ def history():
     user_history = History.query.filter_by(user_id=current_user.id).all()
     return render_template('history.html', history=user_history)
 
+
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
     app.run(debug=True)
