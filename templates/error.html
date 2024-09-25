@@ -7,18 +7,34 @@
     <link rel="stylesheet" href="../static/css/error.css">
 </head>
 <body>
-<div class="error-container">
-    {% if isNotFound %}
-    <p class="error-message">Error en capa 8</p>
-    <p class="instruction">
-        El archivo que subiste no es un archivo HTML.
-    </p>
-    {% else %}
-    <p class="error-message">Error</p>
-    <p class="instruction">
-        {{ error }}
-    </p>
-    {% endif %}
-</div>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1>TICSolver</h1>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="error-section">
+            <div class="container">
+                <div class="error-container">
+                    {% if isNotFound %}
+                        <p class="error-message">Error en capa 8</p>
+                        <p class="instruction">
+                            El archivo que subiste no es un archivo HTML.
+                        </p>
+                    {% else %}
+                        <p class="error-message">Error</p>
+                        <p class="instruction">
+                            {{ error }}
+                        </p>
+                    {% endif %}
+
+                    <a href="{{ url_for('ticsolver') }}" class="btn btn-primary">Volver</a>
+                </div>
+            </div>
+        </section>
+    </main>
 </body>
 </html>
