@@ -14,7 +14,7 @@
                 <h1>TICSolver</h1>
                 <nav>
                     {% if current_user.is_authenticated %}
-                        <span>Hello, {{ current_user.username }}</span>
+                        <span>Hello, {{ current_user.first_name}}</span>
                         <a href="{{ url_for('logout') }}" class="btn btn-secondary">Cerrar Sesión</a>
                     {% else %}
                         <a href="{{ url_for('login') }}" class="btn btn-primary">Iniciar Sesión</a>

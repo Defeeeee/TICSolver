@@ -66,6 +66,7 @@ def google_authorized():
     if not user:
         user = User(
             username=google_info['name'],
+            first_name=google_info['name'],
             email=google_info['email'],
             registered_with_google=True
         )
