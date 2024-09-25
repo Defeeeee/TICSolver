@@ -9,6 +9,19 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import TICSolver
 from models import db, User, History
 
+from flask_dance.contrib.google import make_google_blueprint, google
+
+google_client_id = os.environ.get('GOOGLE_ID')
+google_client_secret = os.environ.get('GOOGLE_SECRET')
+
+blueprint = make_google_blueprint(
+    client_id=google_client_id,
+    client_secret=google_client_secret,
+    scope=["profile", "email"],
+    redirect_to="google_authorized"
+)
+
+
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = tempfile.gettempdir()
 app.config[
@@ -17,6 +30,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.urandom(24)  # Set a secret key for session management
 
 db.init_app(app)
+
+app.register_blueprint(blueprint, url_prefix="/login")
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -27,6 +42,28 @@ login_manager.login_view = 'login'
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+@app.route("/login/google_authorized")
+def google_authorized():
+    if not google.authorized:
+        return redirect(url_for("google.login"))
+
+    resp = google.get("/oauth2/v2/userinfo")
+    assert resp.ok, resp.text
+    google_info = resp.json()
+
+    # Check if user exists in your database, if not create one
+    user = User.query.filter_by(email=google_info['email']).first()
+    if not user:
+        user = User(
+            username=google_info['name'],
+            email=google_info['email'],
+            # ... other fields you need
+        )
+        db.session.add(user)
+        db.session.commit()
+
+    login_user(user)
+    return redirect(url_for("ticsolver"))
 
 @app.route('/favicon.ico')
 def favicon():
