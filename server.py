@@ -129,6 +129,7 @@ def register():
         last_name = request.form['last_name']
         email = request.form['email']
         password = request.form['password']
+
         confirm_password = request.form['confirm_password']
 
         # Check if passwords match
@@ -138,25 +139,33 @@ def register():
 
         try:
             # Check if email already exists
-            existing_user = User.query.filter_by(email=email).first()
-            if existing_user:
+            existing_user_email = User.query.filter_by(email=email).first()
+            if existing_user_email:
                 flash('El correo electrónico ya está registrado', 'error')
+                return redirect(url_for('register'))
+
+            # Check if username already exists
+            existing_user_username = User.query.filter_by(username=username).first()
+            if existing_user_username:
+                flash('El nombre de usuario ya está en uso', 'error')
                 return redirect(url_for('register'))
 
             hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
             new_user = User(
                 username=username,
                 password=hashed_password,
+
                 first_name=first_name,
                 last_name=last_name,
                 email=email
             )
             db.session.add(new_user)
-            db.session.commit()  # Commit changes to the database
+            db.session.commit()
             return redirect(url_for('login'))
 
-        except SQLAlchemyError as e:  # Catch any SQLAlchemy errors during database operations
-            db.session.rollback()  # Roll back the transaction in case of an error
+
+        except SQLAlchemyError as e:
+            db.session.rollback()
             flash('Error al registrar el usuario. Por favor, inténtalo de nuevo.', 'error')
             return redirect(url_for('register'))
 
