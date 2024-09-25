@@ -89,7 +89,26 @@ def favicon():
 
 @app.route('/', methods=['GET', 'POST'])
 def ticsolver():
-    return render_template('upload.html')
+    if current_user.is_authenticated:
+        user_history = History.query.filter_by(user_id=current_user.id).all()
+    else:
+        user_history = None
+    return render_template('upload.html', history=user_history)
+
+
+@app.route('/history/show/<int:history_id>')
+@login_required
+def view_history(history_id):
+    history_entry = History.query.get_or_404(history_id)
+
+    # Authorization check: Ensure the history entry belongs to the current user
+    if history_entry.user_id != current_user.id:
+        flash('No tienes permiso para ver este historial.', 'error')  # Or handle this differently
+        return redirect(url_for('history'))  # Redirect to the user's own history page
+
+    results = json.loads(history_entry.result)
+    return render_template('history_details.html', results=results, filename=history_entry.file_name)
+
 
 
 @app.route('/results', methods=['POST'])
@@ -170,6 +189,7 @@ def register():
             return redirect(url_for('register'))
 
     return render_template('register.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
