@@ -28,7 +28,8 @@ blueprint = make_google_blueprint(
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = tempfile.gettempdir()
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://default:JdcNLQ8b5xyY@ep-shiny-surf-a4imudfy-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require"
+app.config[
+    'SQLALCHEMY_DATABASE_URI'] = "postgresql://default:JdcNLQ8b5xyY@ep-shiny-surf-a4imudfy-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.urandom(24)
 
@@ -44,9 +45,11 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
 
 @app.route("/login/google_authorized")
 def google_authorized():
@@ -76,13 +79,16 @@ def google_authorized():
     login_user(user)
     return redirect(url_for("ticsolver"))
 
+
 @app.route('/favicon.ico')
 def favicon():
     return redirect(url_for('static', filename='favicon.ico'))
 
+
 @app.route('/', methods=['GET', 'POST'])
 def ticsolver():
     return render_template('upload.html')
+
 
 @app.route('/results', methods=['POST'])
 @login_required
@@ -112,17 +118,35 @@ def results():
         except Exception as e:
             return render_template('error.html', isNotFound=("codec can't decode" in str(e)))
 
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         username = request.form['username']
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        email = request.form['email']
         password = request.form['password']
+        confirm_password = request.form['confirm_password']
+
+        # Check if passwords match
+        if password != confirm_password:
+            flash('Las contraseñas no coinciden', 'error')
+            return redirect(url_for('register'))
+
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-        new_user = User(username=username, password=hashed_password)
+        new_user = User(
+            username=username,
+            password=hashed_password,
+            first_name=first_name,
+            last_name=last_name,
+            email=email
+        )
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for('login'))
     return render_template('register.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -137,17 +161,20 @@ def login():
             flash('Invalid username or password or you registered with Google', 'error')
     return render_template('login.html')
 
+
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('ticsolver'))
 
+
 @app.route('/history')
 @login_required
 def history():
     user_history = History.query.filter_by(user_id=current_user.id).all()
     return render_template('history.html', history=user_history)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
