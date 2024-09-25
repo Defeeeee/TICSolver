@@ -126,3 +126,45 @@ header a {
 .btn-secondary:hover {
     background-color: #5a6268;
 }
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .container {
+        max-width: 90%; /* Make the container take up most of the screen width */
+        padding: 20px; /* Reduce padding */
+    }
+
+    h2 {
+        font-size: 24px; /* Reduce heading size */
+    }
+
+    p, li {
+        font-size: 16px; /* Reduce body text and list item size */
+    }
+
+    .header-content {
+        flex-direction: column; /* Stack header elements vertically */
+        align-items: center;
+    }
+
+    .header nav {
+        margin-top: 10px;
+    }
+
+    .history-section {
+        padding-top: 20px; /* Reduce top padding */
+    }
+
+    .history-item {
+        flex-direction: column; /* Stack history items vertically */
+        align-items: flex-start; /* Align items to the left */
+    }
+
+    .history-item .timestamp {
+        margin-top: 5px;
+    }
+
+    .btn-small {
+        margin-top: 10px; /* Add some margin to the button */
+    }
+}

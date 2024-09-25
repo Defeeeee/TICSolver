@@ -116,11 +116,11 @@ header a {
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s;
-    color: #fff; 
+    color: #fff;
 }
 
 .btn-primary {
-    background-color: #007bff; 
+    background-color: #007bff;
 }
 
 .btn-primary:hover {
@@ -128,9 +128,50 @@ header a {
 }
 
 .btn-secondary {
-    background-color: #6c757d; 
+    background-color: #6c757d;
 }
 
 .btn-secondary:hover {
     background-color: #5a6268;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .container {
+        max-width: 90%; /* Make the container take up most of the screen width */
+        padding: 20px; /* Reduce padding */
+    }
+
+    h2 {
+        font-size: 24px; /* Reduce heading size */
+    }
+
+    p, li {
+        font-size: 16px; /* Reduce body text and list item size */
+    }
+
+    .header-content {
+        flex-direction: column; /* Stack header elements vertically */
+        align-items: center;
+    }
+
+    .header nav {
+        margin-top: 10px;
+    }
+
+    .results-section {
+        padding-top: 20px; /* Reduce top padding */
+    }
+
+    .answer-item {
+        padding: 15px; /* Reduce padding in answer items */
+    }
+
+    .answer-item h3 {
+        font-size: 18px; /* Reduce heading size in answer items */
+    }
+
+    .correct-answer {
+        padding: 6px 10px; /* Reduce padding in correct answers */
+    }
 }

@@ -258,3 +258,49 @@ li {
 .register-link a:hover {
     text-decoration: underline;
 }
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .container {
+        max-width: 90%; /* Make the container take up most of the screen width */
+        padding: 20px; /* Reduce padding */
+    }
+
+    h2 {
+        font-size: 24px; /* Reduce heading size */
+    }
+
+    p, li {
+        font-size: 16px; /* Reduce body text and list item size */
+    }
+
+    .header-content {
+        flex-direction: column; /* Stack header elements vertically */
+        align-items: center;
+    }
+
+    .header nav {
+        margin-top: 10px;
+    }
+
+    .login-section {
+        padding: 30px; /* Reduce padding in the login section */
+    }
+
+    .login-form {
+        width: 100%; /* Make the form full width on mobile */
+    }
+
+    .login-form input[type="text"],
+    .login-form input[type="password"] {
+        width: 100%; /* Make input fields full width on mobile */
+    }
+
+    .google-login a, .submit-btn {
+        font-size: 16px; /* Reduce button font size slightly */
+    }
+
+    .register-link {
+        font-size: 14px; /* Reduce register link font size */
+    }
+}
