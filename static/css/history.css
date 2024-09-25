@@ -13,7 +13,7 @@ body {
     padding: 40px;
 }
 
-/* Header Styles (same as in register.css and login.css) */
+/* Header Styles (same as in other pages) */
 .header {
     background-color: #fff;
     color: #333;
@@ -57,56 +57,48 @@ header a {
     color: #fff !important;
 }
 
-/* Results Section Styles */
-.results-section {
-    padding-top: 40px; /* Add some space between header and content */
+/* History Section Styles */
+.history-section {
+    padding-top: 40px;
 }
 
-.results-section h2 {
+.history-section h2 {
     font-size: 30px;
     margin-bottom: 30px;
     text-align: center;
 }
 
-.answer-list {
+.history-list {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-.answer-item {
-    margin-bottom: 20px;
-    padding: 20px;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.answer-item h3 {
-    margin-top: 0;
-    font-size: 20px;
-    color: #333;
-}
-
-.correct-answer-list {
-    list-style: none;
-    padding: 0;
-    margin: 10px 0 0;
-}
-
-.correct-answer {
-    padding: 8px 12px;
+.history-item {
+    margin-bottom: 10px;
+    padding: 15px;
+    border: 1px solid #eee;
     border-radius: 5px;
-    background-color: #f0f0f0;
-    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.no-answer {
-    margin-top: 10px;
-    color: #999;
+.file-name {
+    font-weight: bold;
 }
 
-/* Button Styles (same as in register.css and login.css) */
+.timestamp {
+    color: #666;
+    font-size: 14px;
+}
+
+.btn-small {
+    padding: 8px 12px;
+    font-size: 14px;
+}
+
+/* Button Styles (reusing from other pages) */
 .btn {
     display: inline-block;
     padding: 12px 20px;
@@ -116,11 +108,11 @@ header a {
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s;
-    color: #fff; 
+    color: #fff;
 }
 
 .btn-primary {
-    background-color: #007bff; 
+    background-color: #007bff;
 }
 
 .btn-primary:hover {
@@ -128,7 +120,7 @@ header a {
 }
 
 .btn-secondary {
-    background-color: #6c757d; 
+    background-color: #6c757d;
 }
 
 .btn-secondary:hover {

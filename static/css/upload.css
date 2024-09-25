@@ -8,7 +8,8 @@ body {
 }
 
 .container {
-    max-width: 1200px;
+    /* Adjusted max-width for better spacing */
+    max-width: 960px;
     margin: 0 auto;
     padding: 40px;
 }
@@ -59,7 +60,7 @@ body {
     padding: 100px 0;
     position: relative;
     overflow: hidden;
-    min-height: 60vh /* Make hero section full viewport height */
+    min-height: calc(100vh - 60px); /* Make hero section full viewport height */
 }
 
 .hero-content {
@@ -206,6 +207,41 @@ li {
     padding-bottom: 20px;
 }
 
+/* History Section Styles */
+.history-section {
+    /* ... add any additional styling you want for the history section ... */
+}
+
+.history-list {
+    list-style: none;
+    padding: 0;
+}
+
+.history-item {
+    margin-bottom: 10px;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.file-name {
+    font-weight: bold;
+}
+
+.timestamp {
+    color: #666;
+    font-size: 14px;
+}
+
+.btn-small {
+    padding: 8px 12px;
+    font-size: 14px;
+}
+
+
 /* Button Styles */
 .btn {
     display: inline-block;
@@ -233,4 +269,9 @@ li {
 
 .btn-secondary:hover {
     background-color: #5a6268;
+}
+
+header a {
+  color: inherit; /* blue colors for links too */
+  text-decoration: inherit; /* no underline */
 }

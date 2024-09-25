@@ -244,3 +244,17 @@ li {
 .btn-secondary:hover {
     background-color: #5a6268;
 }
+
+.register-link {
+    margin-top: 20px;
+    font-size: 14px; /* Adjust as needed */
+}
+
+.register-link a {
+    color: #007bff; /* Or any color you prefer for the link */
+    text-decoration: none;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}
