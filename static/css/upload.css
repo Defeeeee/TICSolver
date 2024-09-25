@@ -8,7 +8,6 @@ body {
 }
 
 .container {
-    /* Adjusted max-width for better spacing */
     max-width: 960px;
     margin: 0 auto;
     padding: 40px;
@@ -34,6 +33,15 @@ body {
     font-size: 24px;
 }
 
+.header h1 a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.header h1 a:hover {
+    text-decoration: none;
+}
+
 .header nav {
     margin-top: 0;
 }
@@ -53,6 +61,35 @@ body {
     color: #fff !important;
 }
 
+/* Update Banner Styles */
+
+
+.update-banner {
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+    z-index: 2;
+
+    /* Position the banner directly below the header */
+    position: relative;
+    margin-top: 20px; /* Add some margin to separate it from the header */
+}
+
+.close-banner {
+    position: absolute;
+    top: 50%;
+    right: 40px; /* Reintroduce the right margin for positioning */
+    transform: translateY(-50%);
+    font-size: 24px;
+    padding: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: white;
+}
+
 /* Hero Section Styles */
 .hero {
     background-color: #fff;
@@ -60,7 +97,7 @@ body {
     padding: 100px 0;
     position: relative;
     overflow: hidden;
-    min-height: calc(100vh - 60px); /* Make hero section full viewport height */
+    min-height: calc(100vh - 60px);
 }
 
 .hero-content {

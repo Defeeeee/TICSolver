@@ -25,6 +25,12 @@
         </div>
     </header>
 
+    {% if not current_user.is_authenticated %} <div class="update-banner">
+        <p>🎉 ¡Actualizamos TICSolver! 🎉 Ahora podés iniciar sesión y ver tu historial de correcciones. 🥳</p>
+        <button class="close-banner">&times;</button>
+    </div>
+    {% endif %}
+
     <main>
         {% if not current_user.is_authenticated %}
         <section class="hero">
@@ -100,6 +106,14 @@
         </section>
 
     </main>
+
+    <script>
+    const closeButton = document.querySelector('.close-banner');
+    closeButton.addEventListener('click', () => {
+        const banner = document.querySelector('.update-banner');
+        banner.style.display = 'none';
+    });
+    </script>
 
 </body>
 </html>
