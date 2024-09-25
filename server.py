@@ -35,6 +35,14 @@ app.secret_key = os.urandom(24)
 
 db.init_app(app)
 
+# Check if 'email' column exists in the User table - MOVED HERE
+with app.app_context():
+    inspector = inspect(db.engine)
+    if 'email' not in inspector.get_columns('user'):
+        # Add the 'email' column if it doesn't exist
+        with db.engine.connect() as connection:
+            connection.execute(text('ALTER TABLE "user" ADD COLUMN email VARCHAR(120) UNIQUE;'))
+
 app.register_blueprint(blueprint, url_prefix="/login")
 
 login_manager = LoginManager()
@@ -138,14 +146,6 @@ def logout():
 def history():
     user_history = History.query.filter_by(user_id=current_user.id).all()
     return render_template('history.html', history=user_history)
-
-# Check if 'email' column exists in the User table
-with app.app_context():
-    inspector = inspect(db.engine)
-    if 'email' not in inspector.get_columns('user'):
-        # Add the 'email' column if it doesn't exist
-        with db.engine.connect() as connection:
-            connection.execute(text('ALTER TABLE "user" ADD COLUMN email VARCHAR(120) UNIQUE;'))
 
 if __name__ == '__main__':
     with app.app_context():
