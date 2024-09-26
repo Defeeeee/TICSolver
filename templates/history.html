@@ -7,42 +7,50 @@
     <link rel="stylesheet" href="../static/css/history.css">
 </head>
 <body>
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <a href="{{ url_for('ticsolver') }}"><h1>TICSolver</h1></a>
-                <nav>
-                    {% if current_user.is_authenticated %}
-                        <span>Hello, {{ current_user.first_name}}</span>
-                        <a href="{{ url_for('logout') }}" class="btn btn-secondary">Cerrar Sesión</a>
-                    {% endif %}
-                </nav>
-            </div>
-        </div>
-    </header>
-
-    <main>
-        <section class="history-section">
-            <div class="container">
-                <h2>Historial de Archivos</h2>
-
-                {% if history %}
-                    <ul class="history-list">
-                        {% for entry in history %}
-                            <li class="history-item">
-                                <span class="file-name">{{ entry.file_name }}</span> -
-                                <span class="timestamp">{{ entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</span>
-                                <a href="{{ url_for('view_history', history_id=entry.id) }}" class="btn btn-secondary btn-small">Ver Resultados</a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <p>No hay archivos en tu historial.</p>
+<header class="header">
+    <div class="container">
+        <div class="header-content">
+            <a href="{{ url_for('ticsolver') }}"><h1>TICSolver</h1></a>
+            <nav>
+                {% if current_user.is_authenticated %}
+                <span>Hello, {{ current_user.first_name}}</span>
+                <a href="{{ url_for('logout') }}" class="btn btn-secondary">Cerrar Sesión</a>
                 {% endif %}
+            </nav>
+        </div>
+    </div>
+</header>
 
-                <a href="{{ url_for('ticsolver') }}" class="btn btn-secondary">Volver</a>
-            </div>
-        </section>
-    </main>
+<main>
+    {% with messages = get_flashed_messages()%}
+    {% if messages%}
+    {% for message in messages%}
+    <p class="flashes">{{message}}</p>
+    {%endfor%}
+    {%endif%}
+    {%endwith%}
+    <section class="history-section">
+        <div class="container">
+            <h2>Historial de Archivos</h2>
+
+            {% if history %}
+            <ul class="history-list">
+                {% for entry in history %}
+                <li class="history-item">
+                    <span class="file-name">{{ entry.file_name }}</span> -
+                    <span class="timestamp">{{ entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+                    <a href="{{ url_for('view_history', history_id=entry.id) }}" class="btn btn-secondary btn-small">Ver
+                        Resultados</a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No hay archivos en tu historial.</p>
+            {% endif %}
+
+            <a href="{{ url_for('ticsolver') }}" class="btn btn-secondary">Volver</a>
+        </div>
+    </section>
+</main>
 </body>
 </html>

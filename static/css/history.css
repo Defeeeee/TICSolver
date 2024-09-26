@@ -168,3 +168,11 @@ header a {
         margin-top: 10px; /* Add some margin to the button */
     }
 }
+
+.flashes {
+    color: #dc3545; /* Red color for error messages (adjust if needed) */
+    background-color: #f8d7da; /* Light red background for better visibility */
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 20px; /* Add some spacing above the message */
+}

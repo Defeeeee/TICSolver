@@ -200,8 +200,12 @@ def login():
         if user and not user.registered_with_google and check_password_hash(user.password, password):
             login_user(user)
             return redirect(url_for('ticsolver'))
+        elif user and not user.registered_with_google:
+            flash('Contraseña incorrecta', 'error')
+        elif user and user.registered_with_google:
+            flash('Este usuario está registrado con Google. Por favor, inicia sesión con Google.', 'error')
         else:
-            flash('Invalid username or password or you registered with Google', 'error')
+            flash('Usuario no encontrado', 'error')
     return render_template('login.html')
 
 

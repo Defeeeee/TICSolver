@@ -304,3 +304,10 @@ li {
         font-size: 14px; /* Reduce register link font size */
     }
 }
+.login-form p { /* Assuming flashed messages are displayed within <p> tags */
+    color: #dc3545; /* Red color for error messages (adjust if needed) */
+    background-color: #f8d7da; /* Light red background for better visibility */
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 20px; /* Add some spacing above the message */
+}
