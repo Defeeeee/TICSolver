@@ -4,7 +4,7 @@ import tempfile
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import SQLAlchemyError, OperationalError
 from werkzeug.security import generate_password_hash, check_password_hash
 
 import TICSolver
@@ -62,7 +62,13 @@ def google_authorized():
     google_info = resp.json()
 
     # Check if user exists, if not create one (excluding 'password')
-    user = User.query.filter_by(email=google_info['email']).first()
+    try:
+        user = User.query.filter_by(email=google_info['email']).first()
+    except OperationalError as e:
+        # Handle the OperationalError (e.g., retry, log the error, show a user-friendly message)
+        db.session.rollback()  # Rollback the transaction in case of an error
+        flash('Error temporal en la base de datos. Por favor, inténtalo de nuevo.', 'error')
+        return redirect(url_for('login'))
     if not user:
         user = User(
             username=google_info['name'],
