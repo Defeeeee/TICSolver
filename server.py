@@ -15,6 +15,7 @@ from flask_dance.contrib.google import make_google_blueprint, google
 # Fetch Google credentials from environment variables
 google_client_id = os.environ.get('GOOGLE_ID')
 google_client_secret = os.environ.get('GOOGLE_SECRET')
+dburl = os.environ.get('POSTGRES_URL')
 
 blueprint = make_google_blueprint(
     client_id=google_client_id,
@@ -30,7 +31,7 @@ blueprint = make_google_blueprint(
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = tempfile.gettempdir()
 app.config[
-    'SQLALCHEMY_DATABASE_URI'] = os.environ.get('POSTGRES_URL')
+    'SQLALCHEMY_DATABASE_URI'] = dburl
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.urandom(24)
 
