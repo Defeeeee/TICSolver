@@ -5,115 +5,127 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TICSolver</title>
     <link rel="stylesheet" href="../static/css/upload.css">
+    <!-- Place this tag in your head or just before your close body tag. -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
 </head>
 <body>
 
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <a href="{{ url_for('ticsolver') }}"><h1>TICSolver</h1></a>
-                <nav>
-                    {% if current_user.is_authenticated %}
-                        <span>Hello, {{ current_user.first_name}}</span>
-                        <a href="{{ url_for('logout') }}" class="btn btn-secondary">Cerrar Sesión</a>
-                    {% else %}
-                        <a href="{{ url_for('login') }}" class="btn btn-primary">Iniciar Sesión</a>
-                        <a href="{{ url_for('register') }}" class="btn btn-secondary">Registrarse</a>
-                    {% endif %}
-                </nav>
-            </div>
+<header class="header">
+    <div class="container">
+        <div class="header-content">
+            <a href="{{ url_for('ticsolver') }}"><h1>TICSolver</h1></a>
+            <nav>
+                {% if current_user.is_authenticated %}
+                <span>Hello, {{ current_user.first_name}}</span>
+                <a href="{{ url_for('logout') }}" class="btn btn-secondary">Cerrar Sesión</a>
+                {% else %}
+                <a href="{{ url_for('login') }}" class="btn btn-primary">Iniciar Sesión</a>
+                <a href="{{ url_for('register') }}" class="btn btn-secondary">Registrarse</a>
+                {% endif %}
+            </nav>
         </div>
-    </header>
-
-    {% if not current_user.is_authenticated %} <div class="update-banner">
-        <p>🎉 ¡Actualizamos TICSolver! 🎉 Ahora podés iniciar sesión y ver tu historial de correcciones. 🥳</p>
-        <button class="close-banner">&times;</button>
     </div>
+</header>
+
+{% if not current_user.is_authenticated %}
+<div class="update-banner">
+    <p>🎉 ¡Actualizamos TICSolver! 🎉 Ahora podés iniciar sesión y ver tu historial de correcciones. 🥳</p>
+    <button class="close-banner">&times;</button>
+</div>
+{% endif %}
+
+<main>
+    {% if not current_user.is_authenticated %}
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2>TICSolver</h2>
+                <p>Tu mano derecha para los formularios.</p>
+                <a href="#main-content" class="scroll-down">&#x2193;</a>
+                <br>
+                <br>
+                <br>
+                <!-- Place this tag where you want the button to render. -->
+                <a class="github-button" href="https://github.com/Defeeeee/TICSolver"
+                   data-color-scheme="no-preference: light; light: light; dark: dark;" data-size="large"
+                   data-show-count="true" aria-label="Star Defeeeee/TICSolver on GitHub">Star</a>
+            </div>
+            <div class="blob"></div>
+        </div>
+    </section>
     {% endif %}
 
-    <main>
-        {% if not current_user.is_authenticated %}
-        <section class="hero">
-            <div class="container">
-                <div class="hero-content">
-                    <h2>TICSolver</h2>
-                    <p>Tu mano derecha para los formularios.</p>
-                    <a href="#main-content" class="scroll-down">&#x2193;</a>
-                </div>
-                <div class="blob"></div>
+    <section id="main-content" class="container">
+        {% if current_user.is_authenticated %}
+        <section class="upload-section">
+            <h2>Subir Archivo HTML</h2>
+            <form action="/results" method="POST" enctype="multipart/form-data">
+                <input type="file" name="file" accept=".html">
+                <button type="submit" class="btn btn-primary">Subir</button>
+            </form>
+            <div class="instructions">
+                <h3>Como guardar el archivo del form</h3>
+                <ol>
+                    <li>Hacer <b>click derecho</b> en cualquier lugar de la pagina</li>
+                    <li>Seleccionar <b>Guardar Como</b></li>
+                    <li>Seleccionar el lugar donde se desea guardar el archivo</li>
+                    <li>Subirlo en el cuadro de la izquierda</li>
+                </ol>
             </div>
         </section>
-        {% endif %}
 
-        <section id="main-content" class="container">
-            {% if current_user.is_authenticated %}
-                <section class="upload-section">
-                    <h2>Subir Archivo HTML</h2>
-                    <form action="/results" method="POST" enctype="multipart/form-data">
-                        <input type="file" name="file" accept=".html">
-                        <button type="submit" class="btn btn-primary">Subir</button>
-                    </form>
-                    <div class="instructions">
-                        <h3>Como guardar el archivo del form</h3>
-                        <ol>
-                            <li>Hacer <b>click derecho</b> en cualquier lugar de la pagina</li>
-                            <li>Seleccionar <b>Guardar Como</b></li>
-                            <li>Seleccionar el lugar donde se desea guardar el archivo</li>
-                            <li>Subirlo en el cuadro de la izquierda</li>
-                        </ol>
-                    </div>
-                </section>
-
-                <section class="history-section">
-                    <h2>Historial de Archivos</h2>
-                    <a href="{{ url_for('history') }}" class="btn btn-secondary">Ver Historial Completo</a>
-                    {% if history %}
-                        <ul class="history-list">
-                            {% for entry in history %}
-                                <li class="history-item">
-                                    <span class="file-name">{{ entry.file_name }}</span> -
-                                    <span class="timestamp">{{ entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</span>
-                                    <a href="{{ url_for('view_history', history_id=entry.id) }}" class="btn btn-secondary btn-small">Ver Resultados</a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p>No hay archivos en tu historial.</p>
-                    {% endif %}
-                </section>
-
+        <section class="history-section">
+            <h2>Historial de Archivos</h2>
+            <a href="{{ url_for('history') }}" class="btn btn-secondary">Ver Historial Completo</a>
+            {% if history %}
+            <ul class="history-list">
+                {% for entry in history %}
+                <li class="history-item">
+                    <span class="file-name">{{ entry.file_name }}</span> -
+                    <span class="timestamp">{{ entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+                    <a href="{{ url_for('view_history', history_id=entry.id) }}" class="btn btn-secondary btn-small">Ver
+                        Resultados</a>
+                </li>
+                {% endfor %}
+            </ul>
             {% else %}
-                <section class="welcome-section">
-                    <div class="container">
-                        <div class="welcome-content">
-                            <h2>Bienvenido a TICSolver</h2>
-                            <p>TICSolver es una herramienta que te ayuda a analizar y extraer datos de archivos HTML.</p>
-                        </div>
-                        <div class="features">
-                            <h3>Características:</h3>
-                            <ul>
-                                <li>Sube archivos HTML y extrae datos fácilmente.</li>
-                                <li>Guarda y gestiona tu historial de análisis.</li>
-                                <li>Interfaz amigable y fácil de usar.</li>
-                            </ul>
-                        </div>
-                        <div class="cta">
-                            <p>Para comenzar, <a href="{{ url_for('login') }}" class="btn btn-primary">inicia sesión</a> o <a href="{{ url_for('register') }}" class="btn btn-secondary">regístrate</a>.</p>
-                        </div>
-                    </div>
-                </section>
+            <p>No hay archivos en tu historial.</p>
             {% endif %}
         </section>
 
-    </main>
+        {% else %}
+        <section class="welcome-section">
+            <div class="container">
+                <div class="welcome-content">
+                    <h2>Bienvenido a TICSolver</h2>
+                    <p>TICSolver es una herramienta que te ayuda a analizar y extraer datos de archivos HTML.</p>
+                </div>
+                <div class="features">
+                    <h3>Características:</h3>
+                    <ul>
+                        <li>Sube archivos HTML y extrae datos fácilmente.</li>
+                        <li>Guarda y gestiona tu historial de análisis.</li>
+                        <li>Interfaz amigable y fácil de usar.</li>
+                    </ul>
+                </div>
+                <div class="cta">
+                    <p>Para comenzar, <a href="{{ url_for('login') }}" class="btn btn-primary">inicia sesión</a> o <a
+                            href="{{ url_for('register') }}" class="btn btn-secondary">regístrate</a>.</p>
+                </div>
+            </div>
+        </section>
+        {% endif %}
+    </section>
 
-    <script>
+</main>
+
+<script>
     const closeButton = document.querySelector('.close-banner');
     closeButton.addEventListener('click', () => {
         const banner = document.querySelector('.update-banner');
         banner.style.display = 'none';
     });
-    </script>
+</script>
 
 </body>
 </html>
