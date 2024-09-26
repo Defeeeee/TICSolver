@@ -30,7 +30,7 @@ blueprint = make_google_blueprint(
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = tempfile.gettempdir()
 app.config[
-    'SQLALCHEMY_DATABASE_URI'] = "postgresql://default:JdcNLQ8b5xyY@ep-shiny-surf-a4imudfy-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require"
+    'SQLALCHEMY_DATABASE_URI'] = os.environ.get('POSTGRES_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.urandom(24)
 
