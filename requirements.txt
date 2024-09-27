@@ -6,3 +6,5 @@ Werkzeug
 psycopg2-binary
 flask-dance
 psycopg2-binary
+flask-mail
+flask-apscheduler

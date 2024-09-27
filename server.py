@@ -1,14 +1,25 @@
 import os
 import json
 import tempfile
+import re
+
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from sqlalchemy.exc import SQLAlchemyError, OperationalError
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_apscheduler import APScheduler
+from datetime import datetime, timedelta
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 import TICSolver
 from models import db, User, History
+
+from flask_mail import Mail, Message
+from random import randint
 
 from flask_dance.contrib.google import make_google_blueprint, google
 
@@ -37,6 +48,16 @@ app.secret_key = os.urandom(24)
 
 db.init_app(app)
 
+
+
+app.config['MAIL_SERVER'] = 'smtp.mail.me.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'defeeeee@icloud.com'
+app.config['MAIL_PASSWORD'] = os.environ.get('apple_pass')
+
+mail = Mail(app)
+
 # Create database tables if they don't exist
 with app.app_context():
     db.create_all()
@@ -46,6 +67,19 @@ app.register_blueprint(blueprint, url_prefix="/login")
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+
+scheduler = APScheduler()
+scheduler.init_app(app)
+scheduler.start()
+
+@scheduler.task('interval', id='delete_unverified_users', minutes=30)
+def delete_unverified_users():
+    with app.app_context():
+        thirty_minutes_ago = datetime.utcnow() - timedelta(minutes=30)
+        unverified_users = User.query.filter_by(email_verified=False, registered_with_google=False).filter(User.timestamp < thirty_minutes_ago).all()
+        for user in unverified_users:
+            db.session.delete(user)
+        db.session.commit()
 
 
 @login_manager.user_loader
@@ -117,7 +151,6 @@ def view_history(history_id):
     return render_template('history_details.html', results=results, filename=history_entry.file_name)
 
 
-
 @app.route('/results', methods=['POST'])
 @login_required
 def results():
@@ -155,12 +188,30 @@ def register():
         last_name = request.form['last_name']
         email = request.form['email']
         password = request.form['password']
-
         confirm_password = request.form['confirm_password']
+
+        print(app.config['MAIL_SERVER'])
+        print(app.config['MAIL_PORT'])
+        print(app.config['MAIL_USE_TLS'])
+        print(app.config['MAIL_USERNAME'])
+        print(app.config['MAIL_PASSWORD'])
 
         # Check if passwords match
         if password != confirm_password:
             flash('Las contraseñas no coinciden', 'error')
+            return redirect(url_for('register'))
+
+        if len(password) < 10:
+            flash('La contraseña debe tener al menos 10 caracteres.', 'error')
+            return redirect(url_for('register'))
+
+        if not re.search("[a-z]", password) or \
+                not re.search("[A-Z]", password) or \
+                not re.search("[0-9]", password) or \
+                not re.search("[!@#$%^&*()_+=[{};':\"\\|,.<>/?]", password):  # Removed the backslash before ]
+            flash(
+                'La contraseña debe contener al menos una letra mayúscula, una letra minúscula, un número y un símbolo.',
+                'error')
             return redirect(url_for('register'))
 
         try:
@@ -176,19 +227,30 @@ def register():
                 flash('El nombre de usuario ya está en uso', 'error')
                 return redirect(url_for('register'))
 
+            # Generate verification code
+            verification_code = str(randint(100000, 999999))
+
             hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
             new_user = User(
                 username=username,
                 password=hashed_password,
-
                 first_name=first_name,
                 last_name=last_name,
-                email=email
+                email=email,
+                verification_code=verification_code
             )
             db.session.add(new_user)
             db.session.commit()
-            return redirect(url_for('login'))
 
+            # Send verification email
+            msg = Message('Verificación de correo electrónico',
+                          sender=('Federico Diaz Nemeth', 'defeeeee@icloud.com'),  # Replace with your email
+                          recipients=[email])
+            msg.body = f'Tu código de verificación es: {verification_code}'
+            mail.send(msg)
+
+            flash('¡Registro exitoso! Por favor, verifica tu correo electrónico.', 'success')
+            return redirect(url_for('verify_email'))
 
         except SQLAlchemyError as e:
             db.session.rollback()
@@ -204,15 +266,15 @@ def login():
         username = request.form['username']
         password = request.form['password']
         user = User.query.filter_by(username=username).first()
+
         if user and not user.registered_with_google and check_password_hash(user.password, password):
-            login_user(user)
-            return redirect(url_for('ticsolver'))
-        elif user and not user.registered_with_google:
-            flash('Contraseña incorrecta', 'error')
-        elif user and user.registered_with_google:
-            flash('Este usuario está registrado con Google. Por favor, inicia sesión con Google.', 'error')
+            if user.email_verified:  # Check if email is verified
+                login_user(user)
+                return redirect(url_for('ticsolver'))
+            else:
+                flash('Por favor, verifica tu correo electrónico para iniciar sesión.', 'error')
         else:
-            flash('Usuario no encontrado', 'error')
+            flash('Invalid username or password or you registered with Google', 'error')
     return render_template('login.html')
 
 
@@ -228,6 +290,33 @@ def logout():
 def history():
     user_history = History.query.filter_by(user_id=current_user.id).all()
     return render_template('history.html', history=user_history)
+
+
+@app.route('/verify_email', methods=['GET', 'POST'])
+def verify_email():
+    if current_user.is_authenticated and current_user.email_verified:
+        return redirect(url_for('ticsolver'))
+
+    if request.method == 'POST':
+        code = request.form['verification_code']
+
+        # Find the user with the matching verification code
+        user = User.query.filter_by(verification_code=code).first()
+
+        if user:
+            user.email_verified = True
+            user.verification_code = None  # Clear the verification code after successful verification
+            db.session.commit()
+            flash('¡Correo electrónico verificado exitosamente! Ahora puedes iniciar sesión.', 'success')
+
+            if not current_user.is_authenticated:
+                login_user(user)
+
+            return redirect(url_for('login'))  # Or redirect to another appropriate page
+        else:
+            flash('Código de verificación inválido. Por favor, inténtalo de nuevo.', 'error')
+
+    return render_template('verify_email.html')
 
 
 if __name__ == '__main__':
