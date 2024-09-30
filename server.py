@@ -3,14 +3,15 @@ import os
 import re
 import tempfile
 from datetime import datetime, timedelta
+from random import randint
 
 import requests
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_apscheduler import APScheduler
-from flask_login import LoginManager, login_user, login_required, current_user
+from flask_login import LoginManager, login_user, login_required, current_user, logout_user
 from sqlalchemy.exc import SQLAlchemyError, OperationalError
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
 load_dotenv()
 
@@ -186,14 +187,16 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         first_name = request.form['first_name']
-        last_name = request.form['last_name']
+        last_name = request.form['last_name']  
+
         email = request.form['email']
-        password = request.form['password']
+        password = request.form['password']  
+
         confirm_password = request.form['confirm_password']
 
         # Check if passwords match
         if password != confirm_password:
-            flash('Las contraseñas no coinciden', 'error')
+            flash('Las  contraseñas no coinciden', 'error')
             return redirect(url_for('register'))
 
         if len(password) < 10:
@@ -203,7 +206,7 @@ def register():
         if not re.search("[a-z]", password) or \
                 not re.search("[A-Z]", password) or \
                 not re.search("[0-9]", password) or \
-                not re.search("[!@#$%^&*()_+=[{};':\"\\|,.<>/?]", password):
+                not re.search("[!@#$%^&*()_+=[{};':\"\\|,.<>/?]", password):  
             flash(
                 'La contraseña debe contener al menos una letra mayúscula, una letra minúscula, un número y un símbolo.',
                 'error')
@@ -228,7 +231,8 @@ def register():
             hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
             new_user = User(
                 username=username,
-                password=hashed_password,
+                password=hashed_password,  
+
                 first_name=first_name,
                 last_name=last_name,
                 email=email,
@@ -243,14 +247,15 @@ def register():
             send_simple_message(to=email, subject=subject, text=text)
 
             flash('¡Registro exitoso! Por favor, verifica tu correo electrónico.', 'success')
-            return redirect(url_for('verify_email'))
+            return redirect(url_for('verify_email')) 
 
         except SQLAlchemyError as e:
             db.session.rollback()
             flash('Error al registrar el usuario. Por favor, inténtalo de nuevo.', 'error')
             return redirect(url_for('register'))
 
-        return render_template('register.html')
+    else:  # Handle GET requests
+        return render_template('register.html') 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
