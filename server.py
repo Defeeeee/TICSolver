@@ -1,32 +1,29 @@
-import os
 import json
-import tempfile
+import os
 import re
-
-from flask import Flask, render_template, request, redirect, url_for, flash
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from sqlalchemy.exc import SQLAlchemyError, OperationalError
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask_apscheduler import APScheduler
+import tempfile
 from datetime import datetime, timedelta
 
+import requests
 from dotenv import load_dotenv
+from flask import Flask, render_template, request, redirect, url_for, flash
+from flask_apscheduler import APScheduler
+from flask_login import LoginManager, login_user, login_required, current_user
+from sqlalchemy.exc import SQLAlchemyError, OperationalError
+from werkzeug.security import generate_password_hash
 
 load_dotenv()
 
 import TICSolver
 from models import db, User, History
 
-from flask_mail import Mail, Message
-from random import randint
-
 from flask_dance.contrib.google import make_google_blueprint, google
 
-# Fetch Google credentials from environment variables
+# Fetch Google credentials and Mailgun API key from environment variables
 google_client_id = os.environ.get('GOOGLE_ID')
 google_client_secret = os.environ.get('GOOGLE_SECRET')
 db_credentials = os.environ.get('db_postgres')
+mailgun_api_key = os.environ.get('MAILGUN_API_KEY')
 
 blueprint = make_google_blueprint(
     client_id=google_client_id,
@@ -48,16 +45,6 @@ app.secret_key = os.urandom(24)
 
 db.init_app(app)
 
-
-
-app.config['MAIL_SERVER'] = 'smtp.mail.me.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'defeeeee@icloud.com'
-app.config['MAIL_PASSWORD'] = os.environ.get('apple_pass')
-
-mail = Mail(app)
-
 # Create database tables if they don't exist
 with app.app_context():
     db.create_all()
@@ -72,11 +59,13 @@ scheduler = APScheduler()
 scheduler.init_app(app)
 scheduler.start()
 
+
 @scheduler.task('interval', id='delete_unverified_users', minutes=30)
 def delete_unverified_users():
     with app.app_context():
         thirty_minutes_ago = datetime.utcnow() - timedelta(minutes=30)
-        unverified_users = User.query.filter_by(email_verified=False, registered_with_google=False).filter(User.timestamp < thirty_minutes_ago).all()
+        unverified_users = User.query.filter_by(email_verified=False, registered_with_google=False).filter(
+            User.timestamp < thirty_minutes_ago).all()
         for user in unverified_users:
             db.session.delete(user)
         db.session.commit()
@@ -180,6 +169,18 @@ def results():
             return render_template('error.html', isNotFound=("codec can't decode" in str(e)))
 
 
+def send_simple_message(to, subject, text):
+    api_key = os.environ.get('MAILGUN_API_KEY')
+    domain_name = 'ts.fdiaznem.me'
+    return requests.post(
+        f"https://api.mailgun.net/v3/{domain_name}/messages",
+        auth=("api", api_key),
+        data={"from": f"TICSolver <mailgun@{domain_name}>",
+              "to": [to],
+              "subject": subject,
+              "text": text})
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -189,12 +190,6 @@ def register():
         email = request.form['email']
         password = request.form['password']
         confirm_password = request.form['confirm_password']
-
-        print(app.config['MAIL_SERVER'])
-        print(app.config['MAIL_PORT'])
-        print(app.config['MAIL_USE_TLS'])
-        print(app.config['MAIL_USERNAME'])
-        print(app.config['MAIL_PASSWORD'])
 
         # Check if passwords match
         if password != confirm_password:
@@ -208,7 +203,7 @@ def register():
         if not re.search("[a-z]", password) or \
                 not re.search("[A-Z]", password) or \
                 not re.search("[0-9]", password) or \
-                not re.search("[!@#$%^&*()_+=[{};':\"\\|,.<>/?]", password):  # Removed the backslash before ]
+                not re.search("[!@#$%^&*()_+=[{};':\"\\|,.<>/?]", password):
             flash(
                 'La contraseña debe contener al menos una letra mayúscula, una letra minúscula, un número y un símbolo.',
                 'error')
@@ -242,12 +237,10 @@ def register():
             db.session.add(new_user)
             db.session.commit()
 
-            # Send verification email
-            msg = Message('Verificación de correo electrónico',
-                          sender=('Federico Diaz Nemeth', 'defeeeee@icloud.com'),  # Replace with your email
-                          recipients=[email])
-            msg.body = f'Tu código de verificación es: {verification_code}'
-            mail.send(msg)
+            # Send verification email using Mailgun
+            subject = 'Verificación de correo electrónico'
+            text = f'Tu código de verificación es: {verification_code}'
+            send_simple_message(to=email, subject=subject, text=text)
 
             flash('¡Registro exitoso! Por favor, verifica tu correo electrónico.', 'success')
             return redirect(url_for('verify_email'))
@@ -257,8 +250,7 @@ def register():
             flash('Error al registrar el usuario. Por favor, inténtalo de nuevo.', 'error')
             return redirect(url_for('register'))
 
-    return render_template('register.html')
-
+        return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -277,20 +269,17 @@ def login():
             flash('Invalid username or password or you registered with Google', 'error')
     return render_template('login.html')
 
-
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('ticsolver'))
 
-
 @app.route('/history')
 @login_required
 def history():
     user_history = History.query.filter_by(user_id=current_user.id).all()
     return render_template('history.html', history=user_history)
-
 
 @app.route('/verify_email', methods=['GET', 'POST'])
 def verify_email():
@@ -317,7 +306,6 @@ def verify_email():
             flash('Código de verificación inválido. Por favor, inténtalo de nuevo.', 'error')
 
     return render_template('verify_email.html')
-
 
 if __name__ == '__main__':
     app.run(debug=True)
