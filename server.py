@@ -4,6 +4,7 @@ import re
 import tempfile
 from datetime import datetime, timedelta
 from random import randint
+import logging
 
 import requests
 from dotenv import load_dotenv
@@ -63,13 +64,22 @@ scheduler.start()
 
 @scheduler.task('interval', id='delete_unverified_users', minutes=30)
 def delete_unverified_users():
+    logging.info("Running delete_unverified_users")
     with app.app_context():
-        thirty_minutes_ago = datetime.utcnow() - timedelta(minutes=30)
-        unverified_users = User.query.filter_by(email_verified=False, registered_with_google=False).filter(
-            User.timestamp < thirty_minutes_ago).all()
-        for user in unverified_users:
-            db.session.delete(user)
-        db.session.commit()
+        try:
+            thirty_minutes_ago = datetime.utcnow() - timedelta(minutes=30)
+            unverified_users = User.query.filter_by(email_verified=False, registered_with_google=False).filter(
+                User.timestamp < thirty_minutes_ago).all()
+
+            logging.info(f"Found {len(unverified_users)} unverified users to delete.")
+
+            for user in unverified_users:
+                db.session.delete(user)
+            db.session.commit()
+
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            logging.error(f"Error deleting unverified users: {e}")
 
 
 @login_manager.user_loader
