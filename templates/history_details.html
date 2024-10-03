@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resultados de {{ filename }}</title>
-    <link rel="stylesheet" href="../../static/css/results.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/results.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header class="header">
@@ -21,10 +24,12 @@
         </div>
     </header>
 
+    <div class="top-spacer"></div>
+
     <main>
         <section class="results-section">
             <div class="container">
-                <h2>Resultados de {{ filename }}</h2>
+                <h2 class="section-heading">Resultados de {{ filename }}</h2>
                 <ul class="answer-list">
                     {% for answer in results %}
                         <li class="answer-item">
@@ -52,5 +57,14 @@
             </div>
         </section>
     </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 TICSolver. Todos los derechos reservados.</p>
+            <a href="https://github.com/Defeeeee/TICSolver" target="_blank" class="repo-link">
+                <i class="fab fa-github"></i> Repositorio
+            </a>
+        </div>
+    </footer>
 </body>
 </html>
