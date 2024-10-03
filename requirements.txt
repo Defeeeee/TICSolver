@@ -5,3 +5,7 @@ flask_sqlalchemy
 Werkzeug
 psycopg2-binary
 flask-dance
+psycopg2-binary
+flask-mail
+flask-apscheduler
+python-dotenv

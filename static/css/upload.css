@@ -97,7 +97,7 @@ body {
     padding: 100px 0;
     position: relative;
     overflow: hidden;
-    min-height: calc(100vh - 60px);
+    min-height: calc(50vh - 60px);
 }
 
 .hero-content {

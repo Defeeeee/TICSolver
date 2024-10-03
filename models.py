@@ -3,6 +3,7 @@ from flask_login import UserMixin
 
 db = SQLAlchemy()
 
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -13,6 +14,10 @@ class User(UserMixin, db.Model):
     # New fields
     first_name = db.Column(db.String(100), nullable=True)  # You can adjust nullability as needed
     last_name = db.Column(db.String(100), nullable=True)
+
+    verification_code = db.Column(db.String(6), nullable=True)
+    email_verified = db.Column(db.Boolean, default=False)
+
 
 class History(db.Model):
     id = db.Column(db.Integer, primary_key=True)
