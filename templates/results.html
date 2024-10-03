@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Respuestas</title>
     <link rel="stylesheet" href="../static/css/results.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header class="header">
@@ -13,7 +16,7 @@
                 <a href="{{ url_for('ticsolver') }}"><h1>TICSolver</h1></a>
                 <nav>
                     {% if current_user.is_authenticated %}
-                        <span>Hello, {{ current_user.username }}</span>
+                        <span>Hello, {{ current_user.first_name}}</span>
                         <a href="{{ url_for('logout') }}" class="btn btn-secondary">Cerrar Sesión</a>
                     {% endif %}
                 </nav>
@@ -21,10 +24,12 @@
         </div>
     </header>
 
+    <div class="top-spacer"></div>
+
     <main>
         <section class="results-section">
             <div class="container">
-                <h2>Respuestas Correctas</h2>
+                <h2 class="section-heading">Respuestas Correctas</h2>
                 <ul class="answer-list">
                     {% for answer in answers %}
                         <li class="answer-item">
@@ -34,7 +39,7 @@
                                     {% for ans in answer['correct_answer'] %}
                                         {% if answer['correct_answer'] is mapping %}
                                             <li class="correct-answer">
-                                                {{ ans }}: {{ answer['correct_answer'][ans] }}
+                                                <b>{{ answer['correct_answer'][ans] }}:</b> {{ ans }}
                                             </li>
                                         {% else %}
                                             <li class="correct-answer">{{ ans }}</li>
@@ -52,5 +57,14 @@
             </div>
         </section>
     </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 TICSolver. Todos los derechos reservados.</p>
+            <a href="https://github.com/Defeeeee/TICSolver" target="_blank" class="repo-link">
+                <i class="fab fa-github"></i> Repositorio
+            </a>
+        </div>
+    </footer>
 </body>
 </html>

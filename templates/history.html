@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historial de Archivos</title>
     <link rel="stylesheet" href="../static/css/history.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 <header class="header">
@@ -21,6 +25,8 @@
     </div>
 </header>
 
+<div class="top-spacer"></div>
+
 <main>
     {% with messages = get_flashed_messages()%}
     {% if messages%}
@@ -31,16 +37,18 @@
     {%endwith%}
     <section class="history-section">
         <div class="container">
-            <h2>Historial de Archivos</h2>
+            <h2 class="section-heading">Historial de Archivos</h2>
 
             {% if history %}
             <ul class="history-list">
                 {% for entry in history %}
-                <li class="history-item">
-                    <span class="file-name">{{ entry.file_name }}</span> -
-                    <span class="timestamp">{{ entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</span>
-                    <a href="{{ url_for('view_history', history_id=entry.id) }}" class="btn btn-secondary btn-small">Ver
-                        Resultados</a>
+                <li class="history-item card">
+                    <div class="card-content">
+                        <span class="file-name">{{ entry.file_name }}</span> -
+                        <span class="timestamp">{{ entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+                        <a href="{{ url_for('view_history', history_id=entry.id) }}" class="btn btn-secondary btn-small">Ver
+                            Resultados</a>
+                    </div>
                 </li>
                 {% endfor %}
             </ul>
@@ -52,5 +60,14 @@
         </div>
     </section>
 </main>
+
+<footer class="footer">
+    <div class="container">
+        <p>&copy; 2024 TICSolver. Todos los derechos reservados.</p>
+        <a href="https://github.com/Defeeeee/TICSolver" target="_blank" class="repo-link">
+            <i class="fab fa-github"></i> Repositorio
+        </a>
+    </div>
+</footer>
 </body>
 </html>

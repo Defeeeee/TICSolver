@@ -5,20 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verificar Correo Electrónico</title>
     <link rel="stylesheet" href="../static/css/verify_email.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header class="header">
         <div class="container">
             <div class="header-content">
-                <h1>TICSolver</h1>
+                <a href="{{ url_for('ticsolver') }}"><h1>TICSolver</h1></a>
             </div>
         </div>
     </header>
 
+    <div class="top-spacer"></div>
+
     <main>
         <section class="verify-email-section">
             <div class="container">
-                <h2>Verificar Correo Electrónico</h2>
+                <h2 class="section-heading">Verificar Correo Electrónico</h2>
                 <p>Ingresa el código de 6 dígitos que te enviamos por correo electrónico.</p>
 
                 <form action="/verify_email" method="POST" class="verify-email-form">
