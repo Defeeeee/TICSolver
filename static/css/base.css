@@ -1,0 +1,72 @@
+/* Theme Toggle Styles */
+.theme-toggle {
+    position: relative;
+    display: inline-block;
+    margin-left: auto;
+    width: 40px; /* Reduced width */
+    height: 20px; /* Reduced height */
+}
+
+.theme-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex; /* Use flexbox for alignment */
+    align-items: center; /* Vertically center the icons */
+    justify-content: space-between; /* Space the icons apart */
+    padding: 0 5px; /* Add some padding */
+    border-radius: 20px; /* Rounded corners */
+    background-color: #ccc; /* Default background color */
+    transition: background-color 0.4s; /* Add transition for smooth effect */
+}
+
+.icon i {
+    font-size: 12px; /* Adjust icon size as needed */
+    color: #333; /* Default icon color */
+}
+
+.theme-toggle input:checked + .icon {
+    background-color: #2196F3; /* Changed background color when checked */
+}
+
+.theme-toggle input:checked + .icon i:first-child {
+    display: none; /* Hide the moon icon when checked */
+}
+
+.theme-toggle input:not(:checked) + .icon i:last-child {
+    display: none; /* Hide the sun icon when not checked */
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header nav {
+    display: flex;
+    align-items: center; /* Vertically center the nav items */
+}
+
+/* ... other styles ... */
+
+.theme-toggle {
+    /* ... other styles ... */
+    margin-left: auto; /* Push the toggle to the right side of the navbar */
+}
+
+body.transition,
+.hero.transition,
+.upload-section.transition,
+.history-section.transition,
+.welcome-section.transition {
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
