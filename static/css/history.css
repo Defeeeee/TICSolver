@@ -1,30 +1,37 @@
 /* General Styles */
 body {
-    font-family: 'Public Sans', sans-serif;
+    font-family: 'Space Mono', monospace;
     margin: 0;
     padding: 0;
-    background-color: #f5f5f5;
-    color: #333;
+    background-color: #161853;
+    color: #fff;
+    display: flex; /* Make the body a flex container */
+    flex-direction: column; /* Align items in a column */
+    min-height: 100vh; /* Ensure the body takes up at least the full viewport height */
 }
 
 .container {
-    max-width: 960px; /* Adjust as needed */
+    max-width: 960px;
     margin: 0 auto;
     padding: 40px;
 }
 
 /* Header Styles (same as in other pages) */
 .header {
-    background-color: #fff;
-    color: #333;
+    background-color: #080404;
     padding: 20px 0;
     text-align: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
 }
 
-header a {
-  color: inherit; /* blue colors for links too */
-  text-decoration: inherit; /* no underline */
+.header a {
+    color: inherit;
+    text-decoration: inherit;
 }
 
 .header-content {
@@ -43,7 +50,6 @@ header a {
 }
 
 .header nav a {
-    color: #333;
     text-decoration: none;
     margin: 0 15px;
     font-size: 16px;
@@ -53,8 +59,10 @@ header a {
     text-decoration: underline;
 }
 
-.header nav a.btn {
-    color: #fff !important;
+/* Top Spacer Styles */
+.top-spacer {
+    height: 90px; /* Increased height to 90px */
+    background-color: #080404;
 }
 
 /* History Section Styles */
@@ -66,6 +74,8 @@ header a {
     font-size: 30px;
     margin-bottom: 30px;
     text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
 }
 
 .history-list {
@@ -77,8 +87,24 @@ header a {
 .history-item {
     margin-bottom: 10px;
     padding: 15px;
-    border: 1px solid #eee;
+    border: 1px solid #555;
     border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Card-like History Items */
+.history-item {
+    margin-bottom: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #2a2c69; /* Darker background for the history items */
+}
+
+.card-content {
+    padding: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -89,7 +115,7 @@ header a {
 }
 
 .timestamp {
-    color: #666;
+    color: #cdcdcd;
     font-size: 14px;
 }
 
@@ -112,11 +138,11 @@ header a {
 }
 
 .btn-primary {
-    background-color: #007bff;
+    background-color: #dc1c88;
 }
 
 .btn-primary:hover {
-    background-color: #0056b3;
+    background-color: darken(#dc1c88, 10%);
 }
 
 .btn-secondary {
@@ -127,23 +153,66 @@ header a {
     background-color: #5a6268;
 }
 
+/* Footer Styles */
+.footer {
+    background-color: #080404;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    margin-top: auto; /* Push the footer to the bottom */
+}
+
+.footer .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.footer p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.footer .repo-link {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 0;
+    padding: 10px 15px;
+    background-color: #fff;
+    color: #080404;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.footer .repo-link:hover {
+    background-color: #f0f0f0;
+}
+
+.footer .repo-link i {
+    margin-right: 8px;
+}
+
 /* Media Queries for Responsiveness */
 @media (max-width: 768px) {
     .container {
-        max-width: 90%; /* Make the container take up most of the screen width */
-        padding: 20px; /* Reduce padding */
+        max-width: 90%;
+        padding: 20px;
     }
 
-    h2 {
-        font-size: 24px; /* Reduce heading size */
+    h1, h2 {
+        font-size: 24px;
     }
 
     p, li {
-        font-size: 16px; /* Reduce body text and list item size */
+        font-size: 16px;
     }
 
     .header-content {
-        flex-direction: column; /* Stack header elements vertically */
+        flex-direction: column;
         align-items: center;
     }
 
@@ -152,12 +221,12 @@ header a {
     }
 
     .history-section {
-        padding-top: 20px; /* Reduce top padding */
+        padding-top: 20px;
     }
 
     .history-item {
-        flex-direction: column; /* Stack history items vertically */
-        align-items: flex-start; /* Align items to the left */
+        flex-direction: column;
+        align-items: flex-start;
     }
 
     .history-item .timestamp {
@@ -165,14 +234,23 @@ header a {
     }
 
     .btn-small {
-        margin-top: 10px; /* Add some margin to the button */
+        margin-top: 10px;
+    }
+
+    .footer .container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer .repo-link {
+        margin-top: 10px;
     }
 }
 
 .flashes {
-    color: #dc3545; /* Red color for error messages (adjust if needed) */
-    background-color: #f8d7da; /* Light red background for better visibility */
+    color: #dc3545;
+    background-color: #f8d7da;
     padding: 10px;
     border-radius: 5px;
-    margin-top: 20px; /* Add some spacing above the message */
+    margin-top: 20px;
 }

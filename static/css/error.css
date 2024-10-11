@@ -1,30 +1,49 @@
 /* General Styles */
 body {
-    font-family: 'Public Sans', sans-serif;
+    font-family: 'Space Mono', monospace;
     margin: 0;
     padding: 0;
-    background-color: #f5f5f5;
-    color: #333;
+    background-color: #161853;
+    color: #fff;
 }
 
 .container {
-    max-width: 600px; /* Adjust as needed */
+    max-width: 600px;
     margin: 0 auto;
     padding: 40px;
 }
 
 /* Header Styles (similar to other pages, but without navigation) */
 .header {
-    background-color: #fff;
-    color: #333;
+    background-color: #080404;
     padding: 20px 0;
     text-align: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
 }
 
 .header h1 {
     margin: 0;
     font-size: 24px;
+}
+
+.header a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.header a:hover {
+    text-decoration: underline;
+}
+
+/* Top Spacer Styles */
+.top-spacer {
+    height: 90px;
+    background-color: #080404;
 }
 
 /* Error Section Styles */
@@ -36,19 +55,19 @@ body {
     text-align: center;
     padding: 30px;
     border-radius: 12px;
-    background-color: #fff;
+    background-color: #2a2c69; /* Darker background for the error container */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .error-message {
-    font-size: 24px; /* Increased font size */
+    font-size: 24px;
     color: #dc3545;
     margin-bottom: 20px;
 }
 
 .instruction {
-    font-size: 18px; /* Increased font size */
-    color: #666;
+    font-size: 18px;
+    color: #cdcdcd; /* Lighter color for better contrast */
     margin-bottom: 30px;
 }
 
@@ -66,46 +85,98 @@ body {
 }
 
 .btn-primary {
-    background-color: #007bff;
+    background-color: #dc1c88;
 }
 
 .btn-primary:hover {
-    background-color: #0056b3;
+    background-color: darken(#dc1c88, 10%);
+}
+
+/* Footer Styles */
+.footer {
+    background-color: #080404; /* Dark background color */
+    color: #fff; /* White text color */
+    padding: 20px 0;
+    text-align: center;
+}
+
+.footer .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+.footer p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5; /* Adjust line height to match button height */
+}
+
+.footer .repo-link {
+    /* Styles for the repo link in the footer */
+    display: inline-flex;
+    align-items: center;
+    margin-top: 0; /* Remove the top margin in the footer */
+    padding: 10px 15px;
+    background-color: #fff; /* White background for the repo link in the footer */
+    color: #080404; /* Dark text color for the repo link in the footer */
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.footer .repo-link:hover {
+    background-color: #f0f0f0; /* Slightly darker white on hover */
+}
+
+.footer .repo-link i {
+    margin-right: 8px;
 }
 
 /* Media Queries for Responsiveness */
 @media (max-width: 768px) {
     .container {
-        max-width: 90%; /* Make the container take up most of the screen width */
-        padding: 20px; /* Reduce padding */
+        max-width: 90%;
+        padding: 20px;
     }
 
-    h1, h2 { /* Adjust heading sizes */
+    h1, h2 {
         font-size: 24px;
     }
 
     p {
-        font-size: 16px; /* Reduce body text size */
+        font-size: 16px;
     }
 
     .header-content {
-        flex-direction: column; /* Stack header elements vertically */
+        flex-direction: column;
         align-items: center;
     }
 
     .error-section {
-        padding-top: 20px; /* Reduce top padding */
+        padding-top: 20px;
     }
 
     .error-container {
-        padding: 20px; /* Reduce padding in the error container */
+        padding: 20px;
     }
 
     .error-message {
-        font-size: 20px; /* Reduce error message size */
+        font-size: 20px;
     }
 
     .instruction {
         font-size: 16px;
+    }
+
+    .footer .container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer .repo-link {
+        margin-top: 10px;
     }
 }

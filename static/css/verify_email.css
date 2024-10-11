@@ -1,13 +1,12 @@
 /* General Styles */
 body {
-    font-family: 'Public Sans', sans-serif;
+    font-family: 'Space Mono', monospace;
     margin: 0;
     padding: 0;
-    background-color: #f5f5f5;
-    color: #333;
+    background-color: #161853;
+    color: #fff;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
     min-height: 100vh;
 }
 
@@ -19,17 +18,20 @@ body {
 
 /* Header Styles (same as in other pages) */
 .header {
-    background-color: #fff;
-    color: #333;
+    background-color: #080404;
     padding: 20px 0;
     text-align: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
 }
 
-.header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.header a {
+    color: inherit;
+    text-decoration: inherit;
 }
 
 .header h1 {
@@ -37,46 +39,38 @@ body {
     font-size: 24px;
 }
 
-.header nav {
-    margin-top: 0;
-}
-
-.header nav a {
-    color: #333;
-    text-decoration: none;
-    margin: 0 15px;
-    font-size: 16px;
-}
-
-.header nav a:hover {
-    text-decoration: underline;
-}
-
-.header nav a.btn {
-    color: #fff !important;
+/* Top Spacer Styles */
+.top-spacer {
+    height: 120px;
+    background-color: #080404;
 }
 
 /* Verify Email Section Styles */
 .verify-email-section {
-    background-color: #fff;
+    background-color: #2a2c69;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     padding: 40px;
     text-align: center;
+    margin: 60px auto;
+    max-width: 350px; /* Reduced max-width of the form container */
 }
 
 .verify-email-form input[type="text"] {
-    width: calc(100% - 24px);
+    width: 100%;
     padding: 12px;
-    border: 1px solid #ccc;
+    border: 1px solid #555;
     border-radius: 5px;
     margin-bottom: 20px;
     font-size: 16px;
     box-sizing: border-box;
+    background-color: #333;
+    color: #eee;
+    font-family: 'Space Mono', monospace; /* Use monospace font for input field */
 }
 
 .verify-email-form button[type="submit"] {
-    background-color: #007bff;
+    background-color: #dc1c88;
     color: #fff;
     padding: 15px 30px;
     border: none;
@@ -86,24 +80,25 @@ body {
     transition: background-color 0.3s;
     width: 100%;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-family: 'Space Mono', monospace; /* Use monospace font for button */
 }
 
 .verify-email-form button[type="submit"]:hover {
-    background-color: #0056b3;
+    background-color: #c51878;
 }
 
 /* Flashed Messages Styles */
 .verify-email-form p {
-    color: #dc3545;
-    background-color: #f8d7da;
+    color: #dc3545; /* Red color for error messages */
+    background-color: #f8d7da; /* Light red background */
     padding: 10px;
     border-radius: 5px;
     margin-top: 20px;
 }
 
 .verify-email-form p.success {
-    color: #28a745;
-    background-color: #d4edda;
+    color: #28a745; /* Green color for success messages */
+    background-color: #d4edda; /* Light green background */
 }
 
 .verify-email-form p.info {
