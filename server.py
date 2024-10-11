@@ -99,6 +99,9 @@ def google_authorized():
     # Check if user exists, if not create one (excluding 'password')
     try:
         user = User.query.filter_by(email=google_info['email']).first()
+        if user and not user.registered_with_google:
+            flash('Este correo electrónico ya está registrado con una contraseña. Por favor, inicia sesión con tu contraseña.', 'error')
+            return redirect(url_for('login'))
     except OperationalError as e:
         # Handle the OperationalError (e.g., retry, log the error, show a user-friendly message)
         db.session.rollback()  # Rollback the transaction in case of an error
