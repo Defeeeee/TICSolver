@@ -176,9 +176,9 @@ def results():
                     db.session.commit()
                     return render_template('results.html', answers=correct_answers)
                 else:
-                    return "Error: No data extracted from the file."
+                    return render_template('error.html', error="No se encontraron datos del formulario en el archivo. (puede significar que el formulario no se autocorrija)", isNotFound=False)
             else:
-                return "Error: No file uploaded."
+                return render_template('error.html', error="Error: No se ha seleccionado ningún archivo.", isNotFound=False)
         except Exception as e:
             return render_template('error.html', isNotFound=("codec can't decode" in str(e)))
 
