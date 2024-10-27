@@ -25,5 +25,5 @@ class History(db.Model):
     file_name = db.Column(db.String(150), nullable=False)
     result = db.Column(db.Text, nullable=False)
     timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
-    shareable_link = db.Column(db.String(200), unique=True, nullable=True)  # Pdc4b
-    expiration_time = db.Column(db.DateTime, nullable=True)  # P1f88
+    shareable_link = db.Column(db.String(200), unique=True, nullable=True)
+    expiration_date = db.Column(db.DateTime, nullable=True)
