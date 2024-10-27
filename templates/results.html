@@ -53,6 +53,13 @@
                     {% endfor %}
                 </ul>
 
+                <div class="shareable-link-section">
+                    <h3>Enlace Compartible</h3>
+                    <p>Este enlace es válido por 24 horas:</p>
+                    <input type="text" value="{{ url_for('shareable_results', shareable_link=shareable_link, _external=True) }}" readonly>
+                    <button onclick="copyToClipboard()">Copiar Enlace</button>
+                </div>
+
                 <a href="{{ url_for('ticsolver') }}" class="btn btn-secondary">Volver</a>
             </div>
         </section>
@@ -66,5 +73,15 @@
             </a>
         </div>
     </footer>
+
+    <script>
+        function copyToClipboard() {
+            var copyText = document.querySelector('.shareable-link-section input');
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); /* For mobile devices */
+            document.execCommand("copy");
+            alert("Enlace copiado: " + copyText.value);
+        }
+    </script>
 </body>
 </html>

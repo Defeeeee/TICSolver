@@ -170,17 +170,37 @@ def results():
                 os.remove(file_path)
                 if rowpag_data:
                     correct_answers = TICSolver.extract_correct_answers(rowpag_data)
+                    shareable_link = generate_shareable_link()
+                    expiration_time = datetime.utcnow() + timedelta(hours=24)
                     history_entry = History(user_id=current_user.id, file_name=file.filename,
-                                            result=json.dumps(correct_answers))
+                                            result=json.dumps(correct_answers),
+                                            shareable_link=shareable_link,
+                                            expiration_time=expiration_time)
                     db.session.add(history_entry)
                     db.session.commit()
-                    return render_template('results.html', answers=correct_answers)
+                    return render_template('results.html', answers=correct_answers, shareable_link=shareable_link)
                 else:
                     return render_template('error.html', error="No se encontraron datos del formulario en el archivo. (puede significar que el formulario no se autocorrija)", isNotFound=False)
             else:
                 return render_template('error.html', error="Error: No se ha seleccionado ningún archivo.", isNotFound=False)
         except Exception as e:
             return render_template('error.html', isNotFound=("codec can't decode" in str(e)))
+
+
+def generate_shareable_link():
+    return ''.join([chr(randint(97, 122)) for _ in range(10)])
+
+
+@app.route('/share/<shareable_link>')
+def shareable_results(shareable_link):
+    history_entry = History.query.filter_by(shareable_link=shareable_link).first_or_404()
+
+    if history_entry.expiration_time < datetime.utcnow():
+        flash('El enlace ha expirado.', 'error')
+        return redirect(url_for('ticsolver'))
+
+    results = json.loads(history_entry.result)
+    return render_template('results.html', answers=results)
 
 
 def send_simple_message(to, subject, text):

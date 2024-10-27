@@ -16,6 +16,7 @@ multiple-choice and matching questions.
 * Truncates long question titles for readability.
 * Option to save extracted data to a JSON file or print it to the console.
 * Robust error handling for JSON parsing.
+* Generate shareable links for results that are valid for 24 hours without requiring login.
 
 ## Web Application interface
 

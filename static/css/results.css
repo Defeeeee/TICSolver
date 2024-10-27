@@ -117,6 +117,53 @@ body {
     color: #999;
 }
 
+/* Shareable Link Section Styles */
+.shareable-link-section {
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #2a2c69; /* Darker background for the shareable link section */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.shareable-link-section h3 {
+    margin-top: 0;
+    font-size: 20px;
+    color: #eee; /* Lighter color for headings */
+}
+
+.shareable-link-section p {
+    margin-bottom: 10px;
+    color: #cdcdcd; /* Lighter color for text */
+}
+
+.shareable-link-section input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #555;
+    border-radius: 5px;
+    background-color: #333; /* Darker background for input field */
+    color: #eee; /* Lighter color for input text */
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.shareable-link-section button {
+    background-color: #dc1c88; /* Use the accent color for the button */
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.shareable-link-section button:hover {
+    background-color: darken(#dc1c88, 10%); /* Slightly darken the accent color on hover */
+}
+
 /* Button Styles (same as in register.css and login.css) */
 .btn {
     display: inline-block;
