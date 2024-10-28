@@ -19,7 +19,7 @@ def extract_html_data(archivo_html):
     for script in soup.find_all('script'):
         if 'rowPag' in script.text:
             try:
-                rowpag_data = json.loads(script.text.split('rowPag = ')[1].split('}]}}}};')[0] + '}]}}}}')
+                rowpag_data = json.loads(script.text.split('rowPag = ')[1].split('};')[0] + '}')
                 questions = extract_questions(rowpag_data)
                 return rowpag_data, questions
             except (json.JSONDecodeError, ValueError):
