@@ -78,10 +78,14 @@
 
     <script>
         document.getElementById('generate-link-btn').addEventListener('click', function() {
-            // Simulate link generation
-            const link = 'https://example.com/shareable-link';
-            document.getElementById('shareable-link').value = link;
-            document.getElementById('link-container').style.display = 'block';
+            fetch(`/generate_link/{{ history_id }}`)
+                .then(response => response.json())
+                .then(data => {
+                    const link = data.shareable_link;
+                    document.getElementById('shareable-link').value = link;
+                    document.getElementById('link-container').style.display = 'block';
+                })
+                .catch(error => console.error('Error:', error));
         });
 
         document.getElementById('copy-link-btn').addEventListener('click', function() {

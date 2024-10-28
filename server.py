@@ -8,7 +8,7 @@ import logging
 
 import requests
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_apscheduler import APScheduler
 from flask_login import LoginManager, login_user, login_required, current_user, logout_user
 from sqlalchemy.exc import SQLAlchemyError, OperationalError
@@ -174,7 +174,7 @@ def results():
                                             result=json.dumps(correct_answers))
                     db.session.add(history_entry)
                     db.session.commit()
-                    return render_template('results.html', answers=correct_answers)
+                    return render_template('results.html', answers=correct_answers, history_id=history_entry.id)
                 else:
                     return render_template('error.html', error="No se encontraron datos del formulario en el archivo. (puede significar que el formulario no se autocorrija)", isNotFound=False)
             else:
@@ -199,8 +199,7 @@ def generate_link(history_id):
     history_entry.expiration_date = expiration_date
     db.session.commit()
 
-    flash('Enlace generado exitosamente.', 'success')
-    return redirect(url_for('view_history', history_id=history_id))
+    return jsonify({'shareable_link': url_for('shareable_results', shareable_link=shareable_link, _external=True)})
 
 
 def generate_shareable_link():
