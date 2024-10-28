@@ -184,7 +184,7 @@ def results():
             else:
                 return render_template('error.html', error="Error: No se ha seleccionado ningún archivo.", isNotFound=False)
         except Exception as e:
-            return render_template('error.html', isNotFound=("codec can't decode" in str(e)))
+            return render_template('error.html',error=e, isNotFound=("codec can't decode" in str(e)))
 
 
 def generate_shareable_link():
