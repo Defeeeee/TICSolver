@@ -48,7 +48,6 @@
                         <span class="timestamp">{{ entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</span>
                         <a href="{{ url_for('view_history', history_id=entry.id) }}" class="btn btn-secondary btn-small">Ver
                             Resultados</a>
-                        <a href="{{ url_for('generate_link', history_id=entry.id) }}" class="btn btn-primary btn-small">Generar Enlace</a>
                     </div>
                 </li>
                 {% endfor %}

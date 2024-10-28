@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="../static/css/results.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header class="header">
@@ -53,6 +52,15 @@
                     {% endfor %}
                 </ul>
 
+                <div class="shareable-link-section">
+                    <h3>Generar Enlace Compartible</h3>
+                    <button id="generate-link-btn" class="btn btn-primary">Generar Enlace</button>
+                    <div id="link-container" style="display: none;">
+                        <input type="text" id="shareable-link" readonly>
+                        <button id="copy-link-btn" class="btn btn-secondary">Copiar al Portapapeles</button>
+                    </div>
+                </div>
+
                 <a href="{{ url_for('ticsolver') }}" class="btn btn-secondary">Volver</a>
             </div>
         </section>
@@ -66,5 +74,21 @@
             </a>
         </div>
     </footer>
+
+    <script>
+        document.getElementById('generate-link-btn').addEventListener('click', function() {
+            // Simulate link generation
+            const link = 'https://example.com/shareable-link';
+            document.getElementById('shareable-link').value = link;
+            document.getElementById('link-container').style.display = 'block';
+        });
+
+        document.getElementById('copy-link-btn').addEventListener('click', function() {
+            const linkInput = document.getElementById('shareable-link');
+            linkInput.select();
+            document.execCommand('copy');
+            alert('Enlace copiado al portapapeles');
+        });
+    </script>
 </body>
 </html>
