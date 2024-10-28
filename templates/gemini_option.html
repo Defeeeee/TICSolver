@@ -8,6 +8,24 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Add styles for the loading indicator */
+        #loading-indicator {
+            display: none; /* Initially hidden */
+            border: 8px solid #f3f3f3; /* Light grey */
+            border-radius: 50%;
+            border-top: 8px solid #3498db; /* Blue */
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
     <header class="header">
@@ -35,7 +53,8 @@
                     <input type="hidden" name="rowpag_data" value="{{ rowpag_data | tojson }}">
                     <button type="submit" class="btn btn-primary">Usar Gemini</button>
                 </form>
-            </div>
+                <div id="loading-indicator"></div>
+                <div id="gemini-answers"></div> </div>
         </section>
     </main>
 
@@ -47,5 +66,52 @@
             </a>
         </div>
     </footer>
+
+    <script>
+        document.getElementById('gemini-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Show the loading indicator
+            document.getElementById('loading-indicator').style.display = 'block';
+
+            const rowpagData = JSON.parse(document.querySelector('input[name="rowpag_data"]').value);
+
+            fetch('/use_gemini', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ rowpag_data: rowpagData })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Hide the loading indicator
+                document.getElementById('loading-indicator').style.display = 'none';
+
+                // Display the answers in the 'gemini-answers' div
+                const answersDiv = document.getElementById('gemini-answers');
+                answersDiv.innerHTML = ''; // Clear previous content
+
+                data.answers.forEach(answer => {
+                    const answerElement = document.createElement('p');
+                    answerElement.textContent = `${answer.title}: ${answer.correct_answer}`;
+                    answersDiv.appendChild(answerElement);
+                });
+            })
+            .catch(error => {
+                // Hide the loading indicator
+                document.getElementById('loading-indicator').style.display = 'none';
+
+                console.error('Error using Gemini API:', error);
+                // Display an error message to the user (e.g., using an alert)
+                alert('An error occurred while using the Gemini API. Please try again later.');
+            });
+        });
+    </script>
 </body>
 </html>
