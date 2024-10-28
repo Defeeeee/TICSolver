@@ -171,11 +171,11 @@ def results():
                 if rowpag_data:
                     correct_answers = TICSolver.extract_correct_answers(rowpag_data)
                     shareable_link = generate_shareable_link()
-                    expiration_time = datetime.utcnow() + timedelta(hours=24)
+                    expiration_date = datetime.utcnow() + timedelta(hours=24)
                     history_entry = History(user_id=current_user.id, file_name=file.filename,
                                             result=json.dumps(correct_answers),
                                             shareable_link=shareable_link,
-                                            expiration_time=expiration_time)
+                                            expiration_date=expiration_date)
                     db.session.add(history_entry)
                     db.session.commit()
                     return render_template('results.html', answers=correct_answers, shareable_link=shareable_link)
@@ -195,7 +195,7 @@ def generate_shareable_link():
 def shareable_results(shareable_link):
     history_entry = History.query.filter_by(shareable_link=shareable_link).first_or_404()
 
-    if history_entry.expiration_time < datetime.utcnow():
+    if history_entry.expiration_date < datetime.utcnow():
         flash('El enlace ha expirado.', 'error')
         return redirect(url_for('ticsolver'))
 
