@@ -7,6 +7,7 @@ from random import randint
 import logging
 
 import requests
+from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_apscheduler import APScheduler
@@ -379,6 +380,8 @@ def use_gemini():
                 prompt = f"Question: {question_text}\nOptions: {', '.join(options)}\nPlease provide the correct option."
             else:
                 prompt = f"Question: {question_text}\nPlease provide the correct answer."
+
+            return jsonify({'prompt': prompt})
 
             response = requests.post(
                 f'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key={gemini_api_key}',
