@@ -171,7 +171,7 @@ def results():
                 os.remove(file_path)
                 if rowpag_data:
                     correct_answers = TICSolver.extract_correct_answers(rowpag_data)
-                    if not correct_answers['correct_answer']:
+                    if not correct_answers[0]['correct_answer']:
                         return render_template('gemini_option.html', rowpag_data=rowpag_data)
                     
                     history_entry = History(user_id=current_user.id, file_name=file.filename,
