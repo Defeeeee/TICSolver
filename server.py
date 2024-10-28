@@ -26,6 +26,7 @@ google_client_id = os.environ.get('GOOGLE_ID')
 google_client_secret = os.environ.get('GOOGLE_SECRET')
 db_credentials = os.environ.get('db_postgres')
 mailgun_api_key = os.environ.get('MAILGUN_API_KEY')
+gemini_api_key = os.environ.get('GEMINI_API_KEY')
 
 blueprint = make_google_blueprint(
     client_id=google_client_id,
@@ -170,6 +171,9 @@ def results():
                 os.remove(file_path)
                 if rowpag_data:
                     correct_answers = TICSolver.extract_correct_answers(rowpag_data)
+                    if not correct_answers:
+                        return render_template('gemini_option.html', rowpag_data=rowpag_data)
+                    
                     history_entry = History(user_id=current_user.id, file_name=file.filename,
                                             result=json.dumps(correct_answers))
                     db.session.add(history_entry)
@@ -359,6 +363,40 @@ def verify_email():
             flash('Código de verificación inválido. Por favor, inténtalo de nuevo.', 'error')
 
     return render_template('verify_email.html')
+
+@app.route('/use_gemini', methods=['POST'])
+@login_required
+def use_gemini():
+    rowpag_data = request.json.get('rowpag_data')
+    gemini_answers = []
+
+    for page_id, page_data in rowpag_data.items():
+        for question_id, question_data in page_data["questions"].items():
+            question_text = BeautifulSoup(question_data["title"], 'html.parser').get_text(separator=" ")
+            options = [opt["title"] for opt in question_data["options"]] if "options" in question_data else []
+
+            if options:
+                prompt = f"Question: {question_text}\nOptions: {', '.join(options)}\nPlease provide the correct option."
+            else:
+                prompt = f"Question: {question_text}\nPlease provide the correct answer."
+
+            response = requests.post(
+                f'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key={gemini_api_key}',
+                headers={'Content-Type': 'application/json'},
+                json={"contents": [{"parts": [{"text": prompt}]}]}
+            )
+
+            if response.status_code == 200:
+                gemini_answer = response.json().get('contents', [{}])[0].get('parts', [{}])[0].get('text', '')
+                gemini_answers.append({"title": question_text, "correct_answer": [gemini_answer]})
+            else:
+                gemini_answers.append({"title": question_text, "correct_answer": ["Error retrieving answer"]})
+
+    history_entry = History(user_id=current_user.id, file_name="Gemini API", result=json.dumps(gemini_answers))
+    db.session.add(history_entry)
+    db.session.commit()
+
+    return jsonify({'answers': gemini_answers, 'history_id': history_entry.id})
 
 if __name__ == '__main__':
     app.run(debug=True)
