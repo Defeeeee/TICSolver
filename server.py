@@ -167,7 +167,7 @@ def results():
                 file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
                 file.save(file_path)
 
-                rowpag_data = TICSolver.extract_html_data(file_path)
+                rowpag_data, questions = TICSolver.extract_html_data(file_path)
                 os.remove(file_path)
                 if rowpag_data:
                     correct_answers = TICSolver.extract_correct_answers(rowpag_data)

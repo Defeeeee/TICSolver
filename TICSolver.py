@@ -20,10 +20,21 @@ def extract_html_data(archivo_html):
         if 'rowPag' in script.text:
             try:
                 rowpag_data = json.loads(script.text.split('rowPag = ')[1].split('}]}}}};')[0] + '}]}}}}')
-                return rowpag_data
+                questions = extract_questions(rowpag_data)
+                return rowpag_data, questions
             except (json.JSONDecodeError, ValueError):
-                return None
-    return None
+                return None, None
+    return None, None
+
+
+def extract_questions(datos):
+    """Extrae las preguntas de los datos 'rowPag'."""
+    preguntas = []
+    for page_id, page_data in datos.items():
+        for question_id, question_data in page_data["questions"].items():
+            titulo = BeautifulSoup(question_data["title"], 'html.parser').get_text(separator=" ")
+            preguntas.append({"id": question_id, "title": titulo, "type": question_data["type"]})
+    return preguntas
 
 
 def extract_correct_answers(datos):
@@ -87,7 +98,7 @@ if __name__ == '__main__':
     ruta_archivo_json = 'correct_answers.json'  # Nombre por defecto
 
     # Extraer datos del HTML
-    datos_rowpag = extract_html_data(ruta_archivo_html)
+    datos_rowpag, preguntas = extract_html_data(ruta_archivo_html)
     if datos_rowpag:
         # Extraer respuestas correctas
         respuestas = extract_correct_answers(datos_rowpag)
