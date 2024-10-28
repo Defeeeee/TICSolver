@@ -153,6 +153,15 @@ body {
     background-color: #5a6268;
 }
 
+/* New Button Styles for Generate Link */
+.btn-generate-link {
+    background-color: #28a745; /* Green background for the generate link button */
+}
+
+.btn-generate-link:hover {
+    background-color: darken(#28a745, 10%); /* Slightly darken the green on hover */
+}
+
 /* Footer Styles */
 .footer {
     background-color: #080404;

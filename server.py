@@ -151,7 +151,7 @@ def view_history(history_id):
         return redirect(url_for('history'))  # Redirect to the user's own history page
 
     results = json.loads(history_entry.result)
-    return render_template('history_details.html', results=results, filename=history_entry.file_name)
+    return render_template('history_details.html', results=results, filename=history_entry.file_name, history_id=history_id)
 
 
 @app.route('/results', methods=['POST'])
@@ -170,21 +170,37 @@ def results():
                 os.remove(file_path)
                 if rowpag_data:
                     correct_answers = TICSolver.extract_correct_answers(rowpag_data)
-                    shareable_link = generate_shareable_link()
-                    expiration_date = datetime.utcnow() + timedelta(hours=24)
                     history_entry = History(user_id=current_user.id, file_name=file.filename,
-                                            result=json.dumps(correct_answers),
-                                            shareable_link=shareable_link,
-                                            expiration_date=expiration_date)
+                                            result=json.dumps(correct_answers))
                     db.session.add(history_entry)
                     db.session.commit()
-                    return render_template('results.html', answers=correct_answers, shareable_link=shareable_link)
+                    return render_template('results.html', answers=correct_answers)
                 else:
                     return render_template('error.html', error="No se encontraron datos del formulario en el archivo. (puede significar que el formulario no se autocorrija)", isNotFound=False)
             else:
                 return render_template('error.html', error="Error: No se ha seleccionado ningún archivo.", isNotFound=False)
         except Exception as e:
             return render_template('error.html',error=e, isNotFound=("codec can't decode" in str(e)))
+
+
+@app.route('/generate_link/<int:history_id>')
+@login_required
+def generate_link(history_id):
+    history_entry = History.query.get_or_404(history_id)
+
+    # Authorization check: Ensure the history entry belongs to the current user
+    if history_entry.user_id != current_user.id:
+        flash('No tienes permiso para generar un enlace para este historial.', 'error')
+        return redirect(url_for('history'))
+
+    shareable_link = generate_shareable_link()
+    expiration_date = datetime.utcnow() + timedelta(hours=24)
+    history_entry.shareable_link = shareable_link
+    history_entry.expiration_date = expiration_date
+    db.session.commit()
+
+    flash('Enlace generado exitosamente.', 'success')
+    return redirect(url_for('view_history', history_id=history_id))
 
 
 def generate_shareable_link():
