@@ -368,38 +368,49 @@ def verify_email():
 @app.route('/use_gemini', methods=['POST'])
 @login_required
 def use_gemini():
-    rowpag_data = request.json.get('rowpag_data')
-    gemini_answers = []
+    logging.info("Starting use_gemini function")
+    try:
+        rowpag_data = request.json.get('rowpag_data')
+        gemini_answers = []
 
-    for page_id, page_data in rowpag_data.items():
-        for question_id, question_data in page_data["questions"].items():
-            question_text = BeautifulSoup(question_data["title"], 'html.parser').get_text(separator=" ")
-            options = [opt["title"] for opt in question_data["options"]] if "options" in question_data else []
+        logging.info(f"Received rowpag_data: {rowpag_data}")
 
-            if options:
-                prompt = f"Question: {question_text}\nOptions: {', '.join(options)}\nPlease provide the correct option."
-            else:
-                prompt = f"Question: {question_text}\nPlease provide the correct answer."
+        for page_id, page_data in rowpag_data.items():
+            for question_id, question_data in page_data["questions"].items():
+                question_text = BeautifulSoup(question_data["title"], 'html.parser').get_text(separator=" ")
+                options = [opt["title"] for opt in question_data["options"]] if "options" in question_data else []
 
-            return jsonify({'prompt': prompt})
+                if options:
+                    prompt = f"Question: {question_text}\nOptions: {', '.join(options)}\nPlease provide the correct option."
+                else:
+                    prompt = f"Question: {question_text}\nPlease provide the correct answer."
 
-            response = requests.post(
-                f'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key={gemini_api_key}',
-                headers={'Content-Type': 'application/json'},
-                json={"contents": [{"parts": [{"text": prompt}]}]}
-            )
+                logging.info(f"Generated prompt: {prompt}")
 
-            if response.status_code == 200:
-                gemini_answer = response.json().get('contents', [{}])[0].get('parts', [{}])[0].get('text', '')
-                gemini_answers.append({"title": question_text, "correct_answer": [gemini_answer]})
-            else:
-                gemini_answers.append({"title": question_text, "correct_answer": ["Error retrieving answer"]})
+                response = requests.post(
+                    f'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key={gemini_api_key}',
+                    headers={'Content-Type': 'application/json'},
+                    json={"contents": [{"parts": [{"text": prompt}]}]}
+                )
 
-    history_entry = History(user_id=current_user.id, file_name="Gemini API", result=json.dumps(gemini_answers))
-    db.session.add(history_entry)
-    db.session.commit()
+                logging.info(f"Received response: {response.status_code} - {response.text}")
 
-    return jsonify({'answers': gemini_answers, 'history_id': history_entry.id})
+                if response.status_code == 200:
+                    gemini_answer = response.json().get('contents', [{}])[0].get('parts', [{}])[0].get('text', '')
+                    gemini_answers.append({"title": question_text, "correct_answer": [gemini_answer]})
+                else:
+                    gemini_answers.append({"title": question_text, "correct_answer": ["Error retrieving answer"]})
+
+        history_entry = History(user_id=current_user.id, file_name="Gemini API", result=json.dumps(gemini_answers))
+        db.session.add(history_entry)
+        db.session.commit()
+
+        logging.info("use_gemini function completed successfully")
+
+        return jsonify({'answers': gemini_answers, 'history_id': history_entry.id})
+    except Exception as e:
+        logging.error(f"Error in use_gemini function: {e}")
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
